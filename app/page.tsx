@@ -13,6 +13,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { supabase } from '@/lib/supabase';
 import { registerServiceWorker } from '@/lib/service-worker';
+import { AnimatedBackground } from '@/components/AnimatedBackground';
+import './premium-animations.css';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -534,15 +536,19 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-white">
-      {/* Floating AI Assistant Button - apenas no cliente */}
+    <div className="relative min-h-screen overflow-hidden page-shell">
+      {/* Premium Animated Background */}
+      <AnimatedBackground />
+
+      {/* Content Layer */}
+      <div className="relative z-10">
       {mounted && (
         <div className="fixed bottom-4 sm:bottom-6 right-4 sm:right-6 z-50">
           <div className="relative flex flex-col items-end">
             {/* Balão de fala - aparece por 5 segundos */}
             {showTooltip && (
               <div className="mb-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                <div className="bg-gray-900 text-white text-sm sm:text-base rounded-lg px-4 sm:px-5 py-3 sm:py-3.5 shadow-xl text-center">
+                <div className="bg-[#1c0f14] text-white text-sm sm:text-base rounded-lg px-4 sm:px-5 py-3 sm:py-3.5 shadow-xl text-center">
                   <span className="font-semibold block whitespace-normal max-w-[160px] sm:max-w-none sm:whitespace-nowrap">
                     Pergunte para IA especializada em T.I
                   </span>
@@ -553,7 +559,7 @@ export default function Home() {
             {/* Botão redondo com robô - cor vermelha */}
             <Button
               onClick={handleOpenChat}
-              className="h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center p-0 hover:scale-110 flex-shrink-0"
+              className="h-14 w-14 sm:h-16 sm:w-16 rounded-full chat-fab hover:shadow-2xl transition-all duration-200 flex items-center justify-center p-0 hover:scale-110 flex-shrink-0"
               size="lg"
             >
               <Bot className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -564,10 +570,10 @@ export default function Home() {
 
       {/* Chat Dialog */}
       <Dialog open={chatOpen} onOpenChange={setChatOpen}>
-        <DialogContent className="max-w-2xl h-[600px] flex flex-col p-0">
-          <DialogHeader className="px-6 pt-6 pb-4 border-b">
+        <DialogContent className="max-w-2xl h-[620px] flex flex-col p-0 dialog-shell">
+          <DialogHeader className="px-6 pt-6 pb-4 border-b dialog-header">
             <DialogTitle className="flex items-center gap-2">
-              <Bot className="w-6 h-6 text-blue-600" />
+              <Bot className="w-6 h-6 text-rose-600" />
               Assistente Virtual de T.I
             </DialogTitle>
             <DialogDescription>
@@ -585,8 +591,8 @@ export default function Home() {
                   <div
                     className={`max-w-[80%] rounded-lg px-4 py-3 ${
                       message.role === 'user'
-                        ? 'bg-blue-600 text-white'
-                        : 'bg-gray-100 text-gray-900'
+                        ? 'bg-[#1c0f14] text-white'
+                        : 'bg-white text-gray-900 border border-rose-100'
                     }`}
                   >
                     <div className="flex items-start gap-2">
@@ -622,7 +628,7 @@ export default function Home() {
                 onChange={(e) => setChatInput(e.target.value)}
                 placeholder="Digite sua pergunta..."
                 disabled={chatLoading}
-                className="flex-1"
+                className="flex-1 bg-white/90 border border-rose-100"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -633,7 +639,7 @@ export default function Home() {
               <Button
                 type="submit"
                 disabled={!chatInput.trim() || chatLoading}
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-[#1c0f14] hover:bg-black"
               >
                 <Send className="w-4 h-4" />
               </Button>
@@ -642,52 +648,85 @@ export default function Home() {
         </DialogContent>
       </Dialog>
 
-      <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
-        <div className="max-w-2xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8 sm:mb-12">
-            <div className="inline-flex items-center justify-center mb-4">
-              <img 
-                src="/logogont.png" 
-                alt="Logo Gontijo Fundações" 
-                className="h-20 sm:h-24 md:h-28 w-auto object-contain"
+      <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16 max-w-6xl">
+        <div className="page-hero text-center">
+          <div className="flex flex-col items-center gap-5">
+            <span className="hero-badge">
+              Suporte inteligente com IA especializada
+            </span>
+            <div className="inline-flex items-center justify-center">
+              <img
+                src="/logogont.png"
+                alt="Logo Gontijo Fundações"
+                className="h-16 sm:h-20 md:h-24 w-auto object-contain"
               />
             </div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 px-2">
-              Abertura de chamados T.I/IA 
+            <h1 className="hero-title font-display text-gray-900 px-2">
+              Central de Chamados T.I + IA
             </h1>
+            <p className="hero-subtitle px-2">
+              Abra chamados com contexto claro, receba sugerencias imediatas da IA e acompanhe sua posicao em tempo real.
+            </p>
+            <div className="hero-metrics w-full hidden lg:grid">
+              <div className="metric-card">
+                <Sparkles className="w-5 h-5 text-rose-500" />
+                <div>
+                  <p className="metric-title">IA guiando o diagnostico</p>
+                  <p className="metric-desc">Sugestoes instantaneas para agilizar a triagem.</p>
+                </div>
+              </div>
+              <div className="metric-card">
+                <MessageSquare className="w-5 h-5 text-rose-500" />
+                <div>
+                  <p className="metric-title">Atendimento colaborativo</p>
+                  <p className="metric-desc">Informacoes claras para o time responder mais rapido.</p>
+                </div>
+              </div>
+              <div className="metric-card">
+                <ListOrdered className="w-5 h-5 text-rose-500" />
+                <div>
+                  <p className="metric-title">Fila transparente</p>
+                  <p className="metric-desc">Veja sua posicao e o andamento dos chamados.</p>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          {/* Form Card */}
-          <Card className="shadow-xl border-red-100" data-form-card>
-            <CardHeader className="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-t-lg">
-              <CardTitle className="text-xl sm:text-2xl">Abrir Novo Chamado</CardTitle>
-              <CardDescription className="text-red-50 text-sm sm:text-base">
-                Preencha os dados abaixo para registrar seu chamado
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="pt-6">
-              {/* Success Alert - Melhorado e mais visível */}
+        <div className="grid gap-6 lg:gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-6">
+            {/* Form Card */}
+            <Card className="card-premium border-0 glass-panel" data-form-card>
+              <CardHeader className="card-header-premium">
+                <CardTitle className="sr-only">Abrir Novo Chamado</CardTitle>
+                <CardDescription className="text-red-50 text-sm sm:text-base font-display uppercase tracking-[0.18em]">
+                  Preencha os dados abaixo para registrar seu chamado
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="card-body-premium">
+              {/* Success Alert - Premium Style */}
               {success && (
                 <Alert 
                   data-success-alert
-                  className="mb-6 border-green-500 bg-green-50 shadow-lg animate-in fade-in slide-in-from-top-2 duration-300 ring-2 ring-green-200"
+                  className="alert-success-premium mb-6"
                 >
-                  <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0 animate-pulse" />
-                  <AlertDescription className="text-green-900 font-semibold text-base">
-                    ✅ Chamado enviado com sucesso!
-                  </AlertDescription>
-                  <AlertDescription className="text-green-800 text-sm mt-1">
-                    Seu chamado foi registrado e nossa equipe entrará em contato em breve.
-                  </AlertDescription>
+                  <CheckCircle2 className="h-5 w-5 flex-shrink-0" />
+                  <div>
+                    <AlertDescription className="font-semibold text-base">
+                      ✅ Chamado enviado com sucesso!
+                    </AlertDescription>
+                    <AlertDescription className="text-sm mt-1">
+                      Seu chamado foi registrado e nossa equipe entrará em contato em breve.
+                    </AlertDescription>
+                  </div>
                 </Alert>
               )}
 
               {/* Error Alert */}
               {error && (
-                <Alert className="mb-6 border-red-200 bg-red-50">
-                  <AlertCircle className="h-4 w-4 text-red-600" />
-                  <AlertDescription className="text-red-800">
+                <Alert className="alert-error-premium mb-6">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
                     {error}
                   </AlertDescription>
                 </Alert>
@@ -705,7 +744,7 @@ export default function Home() {
               >
                 {/* Email Field */}
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-700 font-medium">
+                  <Label htmlFor="email" className="text-xs uppercase tracking-[0.18em] text-rose-700 font-semibold">
                     Email Corporativo *
                   </Label>
                   <Input
@@ -723,7 +762,7 @@ export default function Home() {
                         setError('');
                       }
                     }}
-                    className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                    className="input-premium"
                     disabled={loading}
                     required
                   />
@@ -732,7 +771,7 @@ export default function Home() {
                 {/* Description Field */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
-                    <Label htmlFor="description" className="text-gray-700 font-medium">
+                    <Label htmlFor="description" className="text-xs uppercase tracking-[0.18em] text-rose-700 font-semibold">
                       Descrição do Problema *
                     </Label>
                     {description.length >= 10 && (
@@ -742,7 +781,7 @@ export default function Home() {
                         size="sm"
                         onClick={handleAskAI}
                         disabled={aiLoading || loading}
-                        className="text-xs border-blue-200 text-blue-700 hover:bg-blue-50"
+                        className="text-xs border-rose-200 text-rose-700 hover:bg-rose-50"
                       >
                         {aiLoading ? (
                           <>
@@ -776,7 +815,7 @@ export default function Home() {
                         setAiResponse('');
                       }
                     }}
-                    className="min-h-[150px] border-gray-300 focus:border-red-500 focus:ring-red-500"
+                    className="textarea-premium"
                     disabled={loading}
                     required
                   />
@@ -828,7 +867,7 @@ export default function Home() {
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full bg-red-600 hover:bg-red-700 text-white py-4 sm:py-6 text-base sm:text-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="button-primary-premium"
                   disabled={loading || isSubmittingRef.current}
                   onClick={(e) => {
                     // Proteção adicional no clique
@@ -840,11 +879,12 @@ export default function Home() {
                 >
                   {loading ? (
                     <>
-                      <span className="animate-pulse">Enviando...</span>
+                      <span className="button-loading">⚙️</span>
+                      <span className="pulse">Enviando...</span>
                     </>
                   ) : (
                     <>
-                      <Ticket className="w-5 h-5 mr-2" />
+                      <Ticket className="button-icon" />
                       Enviar Chamado
                     </>
                   )}
@@ -856,13 +896,13 @@ export default function Home() {
                     variant="outline"
                     onClick={handleCheckQueue}
                     disabled={queueLoading}
-                    className="w-full border-red-200 text-red-700 hover:bg-red-50"
+                    className="button-secondary-premium"
                   >
                     {queueLoading ? (
-                      <span className="animate-pulse">Verificando fila...</span>
+                      <span className="pulse">Verificando fila...</span>
                     ) : (
                       <>
-                        <ListOrdered className="w-5 h-5 mr-2" />
+                        <ListOrdered className="button-icon" />
                         Verificar posição na fila
                       </>
                     )}
@@ -907,10 +947,34 @@ export default function Home() {
               </form>
             </CardContent>
           </Card>
+            <div className="hero-metrics w-full lg:hidden">
+              <div className="metric-card">
+                <Sparkles className="w-5 h-5 text-rose-500" />
+                <div>
+                  <p className="metric-title">IA guiando o diagnostico</p>
+                  <p className="metric-desc">Sugestoes instantaneas para agilizar a triagem.</p>
+                </div>
+              </div>
+              <div className="metric-card">
+                <MessageSquare className="w-5 h-5 text-rose-500" />
+                <div>
+                  <p className="metric-title">Atendimento colaborativo</p>
+                  <p className="metric-desc">Informacoes claras para o time responder mais rapido.</p>
+                </div>
+              </div>
+              <div className="metric-card">
+                <ListOrdered className="w-5 h-5 text-rose-500" />
+                <div>
+                  <p className="metric-title">Fila transparente</p>
+                  <p className="metric-desc">Veja sua posicao e o andamento dos chamados.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          {/* Queue Always Visible */}
-          <div className="mt-8 sm:mt-10">
-            <Card className="border-gray-200 shadow-lg">
+          <div className="space-y-6">
+            {/* Queue Always Visible */}
+            <Card className="card-premium border-0 shadow-lg glass-panel">
               <CardHeader>
                 <CardTitle className="text-xl">Fila em tempo real</CardTitle>
                 <CardDescription>
@@ -944,17 +1008,17 @@ export default function Home() {
                       {queueList.map((ticket, index) => (
                         <li
                           key={ticket.id}
-                          className="flex items-center justify-between rounded-lg border border-gray-100 bg-gray-50 px-4 py-3 text-sm"
+                          className="queue-item-premium"
                         >
-                          <div className="flex items-center gap-3">
-                            <span className="text-gray-500 font-semibold">
-                              {index + 1}º
+                          <div className="flex items-center gap-3 w-full">
+                            <span className="queue-position">
+                              {index + 1}
                             </span>
-                            <div>
-                              <p className="font-mono text-gray-900">
+                            <div className="flex-1">
+                              <p className="queue-email">
                                 {maskEmail(ticket.email)}
                               </p>
-                              <p className="text-xs text-gray-500">
+                              <p className="queue-timestamp">
                                 Recebido em{' '}
                                 {new Date(ticket.created_at).toLocaleString('pt-BR', {
                                   day: '2-digit',
@@ -965,7 +1029,7 @@ export default function Home() {
                               </p>
                             </div>
                           </div>
-                          <span className="text-xs uppercase tracking-wide text-red-600 font-semibold">
+                          <span className="queue-status">
                             {ticket.status}
                           </span>
                         </li>
@@ -981,33 +1045,35 @@ export default function Home() {
                     size="sm"
                     onClick={fetchQueueList}
                     disabled={queueListLoading}
-                    className="border-red-200 text-red-700 hover:bg-red-50"
+                    className="button-secondary-premium !w-auto"
                   >
                     Atualizar agora
                   </Button>
                 </div>
               </CardContent>
             </Card>
-          </div>
-
-          {/* Footer Info */}
-          <div className="mt-6 sm:mt-8 text-center text-gray-600 text-xs sm:text-sm space-y-3 sm:space-y-4 px-2">
-            <p className="mt-2">
-              Em caso de urgência, entre em contato pelo telefone
-            </p>
-
-            <div>
-              <p className="text-gray-700 mb-2 text-sm">
-                Administradores podem acessar o painel seguro abaixo:
-              </p>
-              <Link href="/admin/login" className="inline-block">
-                <Button className="bg-gray-900 hover:bg-gray-800 text-white text-sm sm:text-base px-4 sm:px-6">
-                  Área Administrativa
-                </Button>
-              </Link>
-            </div>
+            <Card className="card-premium border-0 glass-panel accent-panel">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-lg">Atendimento prioritario</CardTitle>
+                <CardDescription>Para incidentes criticos ou alta urgencia</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 text-sm text-gray-700">
+                <p>
+                  Em caso de urgencia, entre em contato pelo telefone informado pela equipe de T.I.
+                </p>
+                <div className="rounded-lg border border-rose-100 bg-white/70 px-3 py-2 text-xs text-rose-800">
+                  Administradores tem acesso a visao completa e gerenciamento dos chamados.
+                </div>
+                <Link href="/admin/login" className="inline-block">
+                  <Button className="bg-[#1c0f14] hover:bg-black text-white text-sm sm:text-base px-4 sm:px-6">
+                    Area Administrativa
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

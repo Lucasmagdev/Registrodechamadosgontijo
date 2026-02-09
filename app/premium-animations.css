@@ -1,0 +1,2076 @@
+/* ============================================
+   PREMIUM ANIMATIONS & EFFECTS LIBRARY
+   Sistema Visual Premium - Chamados T.I/IA
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   PREMIUM ANIMATIONS & EFFECTS LIBRARY
+   Sistema Visual Premium - Chamados T.I/IA
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ============================================
+   1. BACKGROUND ANIMATIONS - 3D TECH EFFECTS
+   ============================================ */
+
+/* Floating Geometric Shapes Animation */
+@keyframes floatSlow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.08;
+  }
+  50% {
+    transform: translateY(40px) rotate(180deg);
+    opacity: 0.15;
+  }
+}
+
+@keyframes floatMedium {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.05;
+  }
+  50% {
+    transform: translateY(60px) rotate(-180deg);
+    opacity: 0.12;
+  }
+}
+
+@keyframes floatFast {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+    opacity: 0.08;
+  }
+  50% {
+    transform: translateX(30px) translateY(40px);
+    opacity: 0.1;
+  }
+}
+
+/* Background Gradient Animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Tech Lines Sliding Animation */
+@keyframes slideLine {
+  0% {
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+
+/* Parallax Movement on Scroll */
+@keyframes parallaxFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+}
+
+/* Glow Pulse Animation */
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(220, 38, 38, 0.3), 0 0 40px rgba(220, 38, 38, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.5), 0 0 60px rgba(220, 38, 38, 0.2);
+  }
+}
+
+/* ============================================
+   2. CARD & ELEMENT ENTRANCE ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIngress {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ============================================
+   3. INTERACTIVE STATE ANIMATIONS
+   ============================================ */
+
+/* Input Focus Glow */
+@keyframes inputGlow {
+  from {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+  to {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  }
+}
+
+/* Button Hover Lift */
+@keyframes buttonLift {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Icon Pulse */
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+/* Spin Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Wiggle Animation for errors */
+@keyframes wiggle {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* ============================================
+   4. STATUS ANIMATIONS
+   ============================================ */
+
+/* Success Check Animation */
+@keyframes checkmark {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Loading Bounce */
+@keyframes loadingBounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   5. CONTAINER & BACKGROUND SETUP
+   ============================================ */
+
+.page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFFFFF 45%, #FEE2E2 100%);
+  background-size: 200% 200%;
+  z-index: -10;
+  overflow: hidden;
+}
+
+.background-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+
+.blob-primary {
+  width: 400px;
+  height: 400px;
+  background: rgba(220, 38, 38, 0.1);
+  top: -100px;
+  left: -100px;
+  animation: floatSlow 20s ease-in-out infinite;
+}
+
+.blob-secondary {
+  width: 300px;
+  height: 300px;
+  background: rgba(239, 68, 68, 0.08);
+  top: 50%;
+  right: -50px;
+  animation: floatMedium 25s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.blob-tertiary {
+  width: 350px;
+  height: 350px;
+  background: rgba(220, 38, 38, 0.06);
+  bottom: -80px;
+  left: 20%;
+  animation: floatFast 22s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+/* Geometric Shapes */
+.geometric-shapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  opacity: 0.08;
+}
+
+.shape.square {
+  width: 200px;
+  height: 200px;
+  background: rgba(220, 38, 38, 0.1);
+  top: 10%;
+  right: 5%;
+  transform: rotate(45deg);
+  animation: floatSlow 25s ease-in-out infinite;
+}
+
+.shape.circle {
+  width: 150px;
+  height: 150px;
+  background: rgba(239, 68, 68, 0.07);
+  border-radius: 50%;
+  bottom: 15%;
+  left: 5%;
+  animation: floatMedium 20s ease-in-out infinite 1s;
+}
+
+.shape.diamond {
+  width: 140px;
+  height: 140px;
+  background: rgba(220, 38, 38, 0.06);
+  top: 55%;
+  left: 12%;
+  transform: rotate(45deg);
+  animation: floatSlow 28s ease-in-out infinite 2s;
+}
+
+.shape.ring {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 2px solid rgba(239, 68, 68, 0.25);
+  top: 18%;
+  left: 55%;
+  animation: floatMedium 26s ease-in-out infinite 3s;
+}
+
+.floating-chip {
+  position: absolute;
+  width: 80px;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(220, 38, 38, 0.35), rgba(239, 68, 68, 0));
+  opacity: 0.5;
+  filter: blur(0.3px);
+  animation: floatFast 18s ease-in-out infinite;
+}
+
+.chip-1 {
+  top: 22%;
+  left: 20%;
+}
+
+.chip-2 {
+  top: 68%;
+  left: 70%;
+  animation-delay: 2s;
+}
+
+.chip-3 {
+  top: 40%;
+  left: 78%;
+  animation-delay: 4s;
+}
+
+/* ============================================
+   6. CARD STYLES - GLASSMORPHISM
+   ============================================ */
+
+.card-premium {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+    0 8px 32px rgba(220, 38, 38, 0.08);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-premium:hover {
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15),
+    0 12px 40px rgba(220, 38, 38, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Card Header with Gradient */
+.card-header-premium {
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #7F1D1D 100%);
+  border-radius: 20px 20px 0 0;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.05);
+  z-index: 0;
+}
+
+.card-header-premium h2 {
+  position: relative;
+  z-index: 1;
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.card-header-premium p {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.card-body-premium {
+  padding: 32px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-footer-premium {
+  padding: 24px;
+}
+
+/* ============================================
+   7. INPUT & TEXTAREA STYLES
+   ============================================ */
+
+.input-premium {
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1F2937;
+  transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 44px;
+}
+
+.input-premium::placeholder {
+  color: #9CA3AF;
+}
+
+.input-premium:focus {
+  outline: none;
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  background: #FAFAFA;
+  animation: inputGlow 400ms ease-out;
+}
+
+.input-premium:hover:not(:focus) {
+  border-color: #D1D5DB;
+}
+
+.input-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F3F4F6;
+}
+
+.textarea-premium {
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1F2937;
+  transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.textarea-premium::placeholder {
+  color: #9CA3AF;
+}
+
+.textarea-premium:focus {
+  outline: none;
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  background: #FAFAFA;
+  animation: inputGlow 400ms ease-out;
+}
+
+.textarea-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F3F4F6;
+}
+
+/* ============================================
+   8. BUTTON STYLES & STATES
+   ============================================ */
+
+.button-primary-premium {
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.35);
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.button-primary-premium::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 600ms, height 600ms;
+}
+
+.button-primary-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(220, 38, 38, 0.45);
+  filter: brightness(1.1);
+}
+
+.button-primary-premium:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.25);
+}
+
+.button-primary-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-secondary-premium {
+  background: transparent;
+  color: #DC2626;
+  border: 2px solid #DC2626;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.button-secondary-premium:hover {
+  background: rgba(220, 38, 38, 0.05);
+  border-color: #EF4444;
+  color: #7F1D1D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.button-secondary-premium:active {
+  transform: translateY(0);
+}
+
+.button-secondary-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Icon Animation in Buttons */
+.button-icon {
+  width: 20px;
+  height: 20px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-primary-premium:hover .button-icon {
+  animation: spin 0.6s ease-in-out;
+}
+
+.button-loading {
+  animation: spin 1.5s linear infinite;
+}
+
+/* ============================================
+   9. ALERT STYLES
+   ============================================ */
+
+.alert-success-premium {
+  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
+  border: 2px solid #10B981;
+  border-radius: 12px;
+  padding: 16px 20px;
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.alert-success-premium svg {
+  color: #10B981;
+  flex-shrink: 0;
+  animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+.alert-success-premium p {
+  color: #047857;
+  margin: 0;
+  font-weight: 600;
+}
+
+.alert-success-premium small {
+  color: #065F46;
+  margin-top: 4px;
+}
+
+.alert-error-premium {
+  background: linear-gradient(135deg, #FEF2F2 0%, #FEF1F2 100%);
+  border: 2px solid #DC2626;
+  border-radius: 12px;
+  padding: 16px 20px;
+  animation: fadeInUp 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation-iteration-count: 1;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.alert-error-premium svg {
+  color: #DC2626;
+}
+
+.alert-error-premium p {
+  color: #DC2626;
+  margin: 0;
+  font-weight: 600;
+}
+
+.alert-info-premium {
+  background: linear-gradient(135deg, #F0F9FF 0%, #EFF6FF 100%);
+  border: 2px solid #3B82F6;
+  border-radius: 12px;
+  padding: 16px 20px;
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  color: #1E40AF;
+}
+
+/* ============================================
+   10. QUEUE & LIST ITEMS
+   ============================================ */
+
+.queue-item-premium {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInLeft 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.queue-item-premium:hover {
+  background: #FFFFFF;
+  border-color: #DC2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);
+  transform: translateX(2px);
+}
+
+.queue-position {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DC2626, #EF4444);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.queue-info {
+  flex: 1;
+}
+
+.queue-email {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #1F2937;
+  font-weight: 500;
+  margin: 0;
+}
+
+.queue-timestamp {
+  font-size: 12px;
+  color: #6B7280;
+  margin: 4px 0 0;
+}
+
+.queue-status {
+  background: rgba(220, 38, 38, 0.12);
+  color: #7F1D1D;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.queue-skeleton {
+  background: linear-gradient(90deg, #F3F4F6 0%, #E5E7EB 50%, #F3F4F6 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  height: 64px;
+  margin-bottom: 12px;
+  animation: shimmer 2s infinite;
+}
+
+/* ============================================
+   11. AI ASSISTANT BOX
+   ============================================ */
+
+.ai-assistant-box {
+  background: linear-gradient(135deg, #F0F9FF 0%, #F3F4F6 100%);
+  border: 2px solid #3B82F6;
+  border-radius: 14px;
+  padding: 20px;
+  animation: fadeInUp 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+}
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.ai-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #1E40AF;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.ai-icon {
+  animation: spin 20s linear infinite;
+}
+
+.ai-close {
+  background: none;
+  border: none;
+  color: #3B82F6;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 200ms ease-out;
+}
+
+.ai-close:hover {
+  background: rgba(59, 130, 246, 0.1);
+  transform: rotate(90deg);
+}
+
+.ai-content {
+  background: white;
+  border: 1px solid #E0E7FF;
+  border-radius: 10px;
+  padding: 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============================================
+   12. CHAT DIALOG STYLES
+   ============================================ */
+
+.chat-dialog-overlay {
+  animation: fadeIn 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chat-dialog-content {
+  animation: slideUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.chat-header-premium {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  color: white;
+  padding: 20px 24px;
+  border-radius: 20px 20px 0 0;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-messages {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  display: flex;
+  gap: 8px;
+  animation: fadeInScale 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.chat-message.assistant {
+  justify-content: flex-start;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chat-bubble.user {
+  background: #DC2626;
+  color: white;
+}
+
+.chat-bubble.assistant {
+  background: #F3F4F6;
+  color: #1F2937;
+}
+
+.chat-loading {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.chat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9CA3AF;
+  animation: loadingBounce 1.4s infinite;
+}
+
+.chat-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chat-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ============================================
+   13. RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .card-header-premium {
+    padding: 24px;
+  }
+
+  .card-body-premium {
+    padding: 20px 16px;
+  }
+
+  .button-primary-premium {
+    padding: 14px 24px;
+    font-size: 14px;
+    height: 44px;
+  }
+
+  .input-premium {
+    height: 40px;
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+
+  .textarea-premium {
+    min-height: 120px;
+    font-size: 16px;
+  }
+
+  .ai-assistant-box {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .queue-item-premium {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .queue-status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-header-premium {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .card-header-premium h2 {
+    font-size: 20px;
+  }
+
+  .card-body-premium {
+    padding: 16px 12px;
+  }
+
+  .button-primary-premium,
+  .button-secondary-premium {
+    padding: 12px 20px;
+    font-size: 14px;
+    height: 40px;
+  }
+
+  .geometric-shapes {
+    display: none;
+  }
+}
+
+/* ============================================
+   14. ACCESSIBILITY & TRANSITIONS
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.button-primary-premium:focus-visible,
+.button-secondary-premium:focus-visible,
+.input-premium:focus-visible,
+.textarea-premium:focus-visible {
+  outline: 2px solid #DC2626;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   15. UTILITY CLASSES
+   ============================================ */
+
+.fade-in {
+  animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-out {
+  animation: fadeInUp 300ms cubic-bezier(0.4, 0, 0.2, 1) reverse;
+}
+
+.scale-in {
+  animation: fadeInScale 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up {
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-down {
+  animation: fadeInDown 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.spin {
+  animation: spin 1.5s linear infinite;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Transform utilities with transitions */
+.transition-smooth {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-fast {
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-slow {
+  transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* GPU Acceleration */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+}
+@keyframes floatMedium {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+    opacity: 0.05;
+  }
+  50% {
+    transform: translateY(60px) rotate(-180deg);
+    opacity: 0.12;
+  }
+}
+
+@keyframes floatFast {
+  0%, 100% {
+    transform: translateX(0px) translateY(0px);
+    opacity: 0.08;
+  }
+  50% {
+    transform: translateX(30px) translateY(40px);
+    opacity: 0.1;
+  }
+}
+
+/* Background Gradient Animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Parallax Movement on Scroll */
+@keyframes parallaxFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(15px);
+  }
+}
+
+/* ============================================
+   2. CARD & ELEMENT ENTRANCE ANIMATIONS
+   ============================================ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIngress {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ============================================
+   3. INTERACTIVE STATE ANIMATIONS
+   ============================================ */
+
+/* Input Focus Glow */
+@keyframes inputGlow {
+  from {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+  to {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  }
+}
+
+/* Button Hover Lift */
+@keyframes buttonLift {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2px);
+  }
+}
+
+/* Pulse Animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Icon Pulse */
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.9;
+  }
+}
+
+/* Spin Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Wiggle Animation for errors */
+@keyframes wiggle {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* ============================================
+   4. STATUS ANIMATIONS
+   ============================================ */
+
+/* Success Check Animation */
+@keyframes checkmark {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+/* Loading Shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Loading Bounce */
+@keyframes loadingBounce {
+  0%, 80%, 100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  40% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   5. CONTAINER & BACKGROUND SETUP
+   ============================================ */
+
+.page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #FEF2F2 0%, #F9FAFB 50%, #F0F9FF 100%);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease-in-out infinite;
+  z-index: -10;
+  overflow: hidden;
+}
+
+.background-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+
+.blob-primary {
+  width: 400px;
+  height: 400px;
+  background: rgba(220, 38, 38, 0.1);
+  top: -100px;
+  left: -100px;
+  animation: floatSlow 20s ease-in-out infinite;
+}
+
+.blob-secondary {
+  width: 300px;
+  height: 300px;
+  background: rgba(59, 130, 246, 0.08);
+  top: 50%;
+  right: -50px;
+  animation: floatMedium 25s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.blob-tertiary {
+  width: 350px;
+  height: 350px;
+  background: rgba(139, 92, 246, 0.07);
+  bottom: -80px;
+  left: 20%;
+  animation: floatFast 22s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+/* Geometric Shapes */
+.geometric-shapes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shape {
+  position: absolute;
+  opacity: 0.08;
+}
+
+.shape.square {
+  width: 200px;
+  height: 200px;
+  background: rgba(220, 38, 38, 0.1);
+  top: 10%;
+  right: 5%;
+  transform: rotate(45deg);
+  animation: floatSlow 25s ease-in-out infinite;
+}
+
+.shape.circle {
+  width: 150px;
+  height: 150px;
+  background: rgba(59, 130, 246, 0.08);
+  border-radius: 50%;
+  bottom: 15%;
+  left: 5%;
+  animation: floatMedium 20s ease-in-out infinite 1s;
+}
+
+/* ============================================
+   6. CARD STYLES - GLASSMORPHISM
+   ============================================ */
+
+.card-premium {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+    0 8px 32px rgba(220, 38, 38, 0.08);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-premium:hover {
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.15),
+    0 12px 40px rgba(220, 38, 38, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Card Header with Gradient */
+.card-header-premium {
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #7F1D1D 100%);
+  border-radius: 20px 20px 0 0;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-header-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.05);
+  z-index: 0;
+}
+
+.card-header-premium h2 {
+  position: relative;
+  z-index: 1;
+  color: white;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.card-header-premium p {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.card-body-premium {
+  padding: 32px 24px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-footer-premium {
+  padding: 24px;
+}
+
+/* ============================================
+   7. INPUT & TEXTAREA STYLES
+   ============================================ */
+
+.input-premium {
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1F2937;
+  transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 44px;
+}
+
+.input-premium::placeholder {
+  color: #9CA3AF;
+}
+
+.input-premium:focus {
+  outline: none;
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  background: #FAFAFA;
+  animation: inputGlow 400ms ease-out;
+}
+
+.input-premium:hover:not(:focus) {
+  border-color: #D1D5DB;
+}
+
+.input-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F3F4F6;
+}
+
+.textarea-premium {
+  background: rgba(255, 255, 255, 1);
+  border: 1px solid #E5E7EB;
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #1F2937;
+  transition: all 280ms cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.textarea-premium::placeholder {
+  color: #9CA3AF;
+}
+
+.textarea-premium:focus {
+  outline: none;
+  border-color: #DC2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  background: #FAFAFA;
+  animation: inputGlow 400ms ease-out;
+}
+
+.textarea-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #F3F4F6;
+}
+
+/* ============================================
+   8. BUTTON STYLES & STATES
+   ============================================ */
+
+.button-primary-premium {
+  background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px 32px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 25px rgba(220, 38, 38, 0.35);
+  height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.button-primary-premium::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  transform: translate(-50%, -50%);
+  transition: width 600ms, height 600ms;
+}
+
+.button-primary-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(220, 38, 38, 0.45);
+  filter: brightness(1.1);
+}
+
+.button-primary-premium:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(220, 38, 38, 0.25);
+}
+
+.button-primary-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.button-secondary-premium {
+  background: transparent;
+  color: #DC2626;
+  border: 2px solid #DC2626;
+  border-radius: 12px;
+  padding: 14px 28px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.button-secondary-premium:hover {
+  background: rgba(220, 38, 38, 0.05);
+  border-color: #EF4444;
+  color: #7F1D1D;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.button-secondary-premium:active {
+  transform: translateY(0);
+}
+
+.button-secondary-premium:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Icon Animation in Buttons */
+.button-icon {
+  width: 20px;
+  height: 20px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button-primary-premium:hover .button-icon {
+  animation: spin 0.6s ease-in-out;
+}
+
+.button-loading {
+  animation: spin 1.5s linear infinite;
+}
+
+/* ============================================
+   9. ALERT STYLES
+   ============================================ */
+
+.alert-success-premium {
+  background: linear-gradient(135deg, #ECFDF5 0%, #F0FDF4 100%);
+  border: 2px solid #10B981;
+  border-radius: 12px;
+  padding: 16px 20px;
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.alert-success-premium svg {
+  color: #10B981;
+  flex-shrink: 0;
+  animation: iconPulse 1.5s ease-in-out infinite;
+}
+
+.alert-success-premium p {
+  color: #047857;
+  margin: 0;
+  font-weight: 600;
+}
+
+.alert-success-premium small {
+  color: #065F46;
+  margin-top: 4px;
+}
+
+.alert-error-premium {
+  background: linear-gradient(135deg, #FEF2F2 0%, #FEF1F2 100%);
+  border: 2px solid #DC2626;
+  border-radius: 12px;
+  padding: 16px 20px;
+  animation: fadeInUp 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation-iteration-count: 1;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.1);
+}
+
+.alert-error-premium svg {
+  color: #DC2626;
+}
+
+.alert-error-premium p {
+  color: #DC2626;
+  margin: 0;
+  font-weight: 600;
+}
+
+.alert-info-premium {
+  background: linear-gradient(135deg, #F0F9FF 0%, #EFF6FF 100%);
+  border: 2px solid #3B82F6;
+  border-radius: 12px;
+  padding: 16px 20px;
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  color: #1E40AF;
+}
+
+/* ============================================
+   10. QUEUE & LIST ITEMS
+   ============================================ */
+
+.queue-item-premium {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInLeft 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.queue-item-premium:hover {
+  background: #FFFFFF;
+  border-color: #DC2626;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.08);
+  transform: translateX(2px);
+}
+
+.queue-position {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #DC2626, #EF4444);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.queue-info {
+  flex: 1;
+}
+
+.queue-email {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #1F2937;
+  font-weight: 500;
+  margin: 0;
+}
+
+.queue-timestamp {
+  font-size: 12px;
+  color: #6B7280;
+  margin: 4px 0 0;
+}
+
+.queue-status {
+  background: rgba(220, 38, 38, 0.12);
+  color: #7F1D1D;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.queue-skeleton {
+  background: linear-gradient(90deg, #F3F4F6 0%, #E5E7EB 50%, #F3F4F6 100%);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  height: 64px;
+  margin-bottom: 12px;
+  animation: shimmer 2s infinite;
+}
+
+/* ============================================
+   11. AI ASSISTANT BOX
+   ============================================ */
+
+.ai-assistant-box {
+  background: linear-gradient(135deg, #F0F9FF 0%, #F3F4F6 100%);
+  border: 2px solid #3B82F6;
+  border-radius: 14px;
+  padding: 20px;
+  animation: fadeInUp 500ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.1);
+}
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.ai-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: #1E40AF;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.ai-icon {
+  animation: spin 20s linear infinite;
+}
+
+.ai-close {
+  background: none;
+  border: none;
+  color: #3B82F6;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 200ms ease-out;
+}
+
+.ai-close:hover {
+  background: rgba(59, 130, 246, 0.1);
+  transform: rotate(90deg);
+}
+
+.ai-content {
+  background: white;
+  border: 1px solid #E0E7FF;
+  border-radius: 10px;
+  padding: 16px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #374151;
+  line-height: 1.6;
+  margin-bottom: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* ============================================
+   12. CHAT DIALOG STYLES
+   ============================================ */
+
+.chat-dialog-overlay {
+  animation: fadeIn 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chat-dialog-content {
+  animation: slideUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.chat-header-premium {
+  background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  color: white;
+  padding: 20px 24px;
+  border-radius: 20px 20px 0 0;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-messages {
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.chat-message {
+  display: flex;
+  gap: 8px;
+  animation: fadeInScale 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chat-message.user {
+  justify-content: flex-end;
+}
+
+.chat-message.assistant {
+  justify-content: flex-start;
+}
+
+.chat-bubble {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.chat-bubble.user {
+  background: #DC2626;
+  color: white;
+}
+
+.chat-bubble.assistant {
+  background: #F3F4F6;
+  color: #1F2937;
+}
+
+.chat-loading {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.chat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #9CA3AF;
+  animation: loadingBounce 1.4s infinite;
+}
+
+.chat-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.chat-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ============================================
+   13. RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  .card-header-premium {
+    padding: 24px;
+  }
+
+  .card-body-premium {
+    padding: 20px 16px;
+  }
+
+  .button-primary-premium {
+    padding: 14px 24px;
+    font-size: 14px;
+    height: 44px;
+  }
+
+  .input-premium {
+    height: 40px;
+    padding: 10px 14px;
+    font-size: 16px;
+  }
+
+  .textarea-premium {
+    min-height: 120px;
+    font-size: 16px;
+  }
+
+  .ai-assistant-box {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .queue-item-premium {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .queue-status {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-header-premium {
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .card-header-premium h2 {
+    font-size: 20px;
+  }
+
+  .card-body-premium {
+    padding: 16px 12px;
+  }
+
+  .button-primary-premium,
+  .button-secondary-premium {
+    padding: 12px 20px;
+    font-size: 14px;
+    height: 40px;
+  }
+
+  .geometric-shapes {
+    display: none;
+  }
+}
+
+/* ============================================
+   14. ACCESSIBILITY & TRANSITIONS
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.button-primary-premium:focus-visible,
+.button-secondary-premium:focus-visible,
+.input-premium:focus-visible,
+.textarea-premium:focus-visible {
+  outline: 2px solid #DC2626;
+  outline-offset: 2px;
+}
+
+/* ============================================
+   15. UTILITY CLASSES
+   ============================================ */
+
+.fade-in {
+  animation: fadeInUp 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-out {
+  animation: fadeInUp 300ms cubic-bezier(0.4, 0, 0.2, 1) reverse;
+}
+
+.scale-in {
+  animation: fadeInScale 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up {
+  animation: fadeInUp 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-down {
+  animation: fadeInDown 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.spin {
+  animation: spin 1.5s linear infinite;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Transform utilities with transitions */
+.transition-smooth {
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-fast {
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition-slow {
+  transition: all 500ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* GPU Acceleration */
+.gpu-accelerate {
+  transform: translateZ(0);
+  will-change: transform;
+}
