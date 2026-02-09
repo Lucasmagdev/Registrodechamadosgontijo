@@ -662,7 +662,7 @@ export default function Home() {
               />
             </div>
             <h1 className="hero-title font-display text-gray-900 px-2">
-              Central de Chamados T.I + IA
+              Central de chamados de TI
             </h1>
             <p className="hero-subtitle px-2">
               Abra chamados com contexto claro, receba sugerencias imediatas da IA e acompanhe sua posicao em tempo real.
