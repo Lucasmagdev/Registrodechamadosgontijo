@@ -53,14 +53,14 @@ export default function AdminPage() {
   const [kbForm, setKbForm] = useState({ question: '', answer: '', category: 'geral', keywords: '' });
   const [kbSearch, setKbSearch] = useState('');
 
-  // FunÃ§Ã£o auxiliar para usar sessionStorage com fallback
+  // Função auxiliar para usar sessionStorage com fallback
   const getSessionStorage = (key: string): string | null => {
     if (typeof window === 'undefined') return null;
     try {
       return sessionStorage.getItem(key);
     } catch (error) {
-      // Chrome pode bloquear sessionStorage em modo incÃ³gnito ou com polÃ­ticas restritivas
-      console.warn('sessionStorage nÃ£o disponÃ­vel:', error);
+      // Chrome pode bloquear sessionStorage em modo incógnito ou com políticas restritivas
+      console.warn('sessionStorage não disponível:', error);
       return null;
     }
   };
@@ -70,11 +70,11 @@ export default function AdminPage() {
     try {
       sessionStorage.removeItem(key);
     } catch (error) {
-      console.warn('NÃ£o foi possÃ­vel remover do sessionStorage:', error);
+      console.warn('Não foi possível remover do sessionStorage:', error);
     }
   };
 
-  // Verificar autenticaÃ§Ã£o
+  // Verificar autenticação
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const authStatus = getSessionStorage('admin_authenticated');
@@ -87,7 +87,7 @@ export default function AdminPage() {
     }
   }, [router]);
 
-  // FunÃ§Ã£o de logout
+  // Função de logout
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
       removeSessionStorage('admin_authenticated');
@@ -207,7 +207,7 @@ export default function AdminPage() {
         .eq('id', id);
 
       if (error) throw error;
-      setSuccessMessage('Entrada excluÃ­da com sucesso!');
+      setSuccessMessage('Entrada excluída com sucesso!');
       loadKnowledgeBase();
       setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err: any) {
@@ -246,7 +246,7 @@ export default function AdminPage() {
         throw updateError;
       }
 
-      // Recarregar tickets do servidor para garantir sincronizaÃ§Ã£o
+      // Recarregar tickets do servidor para garantir sincronização
       await loadTickets();
 
       setSuccessMessage(
@@ -255,7 +255,7 @@ export default function AdminPage() {
           : 'Status do chamado atualizado.'
       );
 
-      // Se marcou como resolvido, mudar para a aba de resolvidos apÃ³s recarregar
+      // Se marcou como resolvido, mudar para a aba de resolvidos após recarregar
       if (nextStatus === 'resolvido') {
         // Pequeno delay para garantir que os dados foram recarregados
         setTimeout(() => {
@@ -264,7 +264,7 @@ export default function AdminPage() {
       }
     } catch (err: any) {
       console.error('Erro ao atualizar status:', err);
-      setError('NÃ£o foi possÃ­vel atualizar o status do chamado. Tente novamente.');
+      setError('Não foi possível atualizar o status do chamado. Tente novamente.');
     } finally {
       setUpdatingTicketId(null);
     }
@@ -370,7 +370,7 @@ export default function AdminPage() {
     }
   };
 
-  // Filtrar tickets por status usando useMemo para garantir recÃ¡lculo quando tickets mudarem
+  // Filtrar tickets por status usando useMemo para garantir recálculo quando tickets mudarem
   const openTickets = useMemo(() => {
     return filteredTickets.filter(ticket => {
       const status = (ticket.status || '').toLowerCase().trim();
@@ -403,7 +403,7 @@ export default function AdminPage() {
 
   const dashboardPeriodLabel = useMemo(() => {
     if (isDateRangeInvalid) {
-      return 'PerÃ­odo invÃ¡lido';
+      return 'Período inválido';
     }
     if (startDate && endDate) {
       return `${formatDateOnly(startDate)} a ${formatDateOnly(endDate)}`;
@@ -412,12 +412,12 @@ export default function AdminPage() {
       return `Desde ${formatDateOnly(startDate)}`;
     }
     if (endDate) {
-      return `AtÃ© ${formatDateOnly(endDate)}`;
+      return `Até ${formatDateOnly(endDate)}`;
     }
     return new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
   }, [startDate, endDate, isDateRangeInvalid]);
 
-  // EstatÃ­sticas do mÃªs atual
+  // Estatísticas do mês atual
   const monthlyStats = useMemo(() => {
     const monthTickets = dashboardTickets;
 
@@ -520,14 +520,14 @@ export default function AdminPage() {
     };
   }, [dashboardTickets, hasDateFilter, isDateRangeInvalid, startDate, endDate]);
 
-  // FunÃ§Ã£o para exportar chamados para CSV
+  // Função para exportar chamados para CSV
   const exportToCSV = () => {
     setExporting(true);
     setError('');
     
     try {
       if (isDateRangeInvalid) {
-        setError('A data final deve ser maior ou igual à data inicial.');
+        setError('A data final deve ser maior ou igual � data inicial.');
         setExporting(false);
         return;
       }
@@ -535,15 +535,15 @@ export default function AdminPage() {
       const ticketsForExport = filteredTickets;
 
       if (ticketsForExport.length === 0) {
-        setError('Nenhum chamado encontrado para o perÃ­odo selecionado.');
+        setError('Nenhum chamado encontrado para o período selecionado.');
         setExporting(false);
         return;
       }
 
       // Preparar dados para CSV/Excel
-      // Usar ponto e vÃ­rgula (;) como separador para Excel em portuguÃªs
+      // Usar ponto e vírgula (;) como separador para Excel em português
       const separator = ';';
-      const csvHeaders = ['ID', 'Email', 'DescriÃ§Ã£o', 'Status', 'Data de CriaÃ§Ã£o', 'Data de AtualizaÃ§Ã£o'];
+      const csvHeaders = ['ID', 'Email', 'Descrição', 'Status', 'Data de Criação', 'Data de Atualização'];
       
       const csvRows = ticketsForExport.map(ticket => {
         const createdDate = new Date(ticket.created_at).toLocaleString('pt-BR', {
@@ -561,15 +561,15 @@ export default function AdminPage() {
           minute: '2-digit'
         });
         
-        // Escapar caracteres especiais na descriÃ§Ã£o
+        // Escapar caracteres especiais na descrição
         const description = ticket.description
           .replace(/"/g, '""') // Escapar aspas duplas
-          .replace(/\n/g, ' ') // Substituir quebras de linha por espaÃ§o
+          .replace(/\n/g, ' ') // Substituir quebras de linha por espaço
           .replace(/\r/g, '') // Remover retornos de carro
-          .replace(/;/g, ',') // Substituir ponto e vÃ­rgula por vÃ­rgula
+          .replace(/;/g, ',') // Substituir ponto e vírgula por vírgula
           .trim();
         
-        // FunÃ§Ã£o para escapar valores que contenham o separador ou aspas
+        // Função para escapar valores que contenham o separador ou aspas
         const escapeValue = (value: string) => {
           if (value.includes(separator) || value.includes('"') || value.includes('\n')) {
             return `"${value.replace(/"/g, '""')}"`;
@@ -587,7 +587,7 @@ export default function AdminPage() {
         ];
       });
 
-      // Criar conteÃºdo CSV com separador ponto e vÃ­rgula
+      // Criar conteúdo CSV com separador ponto e vírgula
       const csvContent = [
         csvHeaders.join(separator),
         ...csvRows.map(row => row.join(separator))
@@ -605,7 +605,7 @@ export default function AdminPage() {
       const link = document.createElement('a');
       link.href = url;
       
-      // Nome do arquivo com perÃ­odo
+      // Nome do arquivo com período
       let filename = 'chamados';
       if (startDate && endDate) {
         const start = new Date(startDate).toLocaleDateString('pt-BR').replace(/\//g, '-');
@@ -625,7 +625,7 @@ export default function AdminPage() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      setSuccessMessage(`ExportaÃ§Ã£o concluÃ­da! ${ticketsForExport.length} chamado(s) exportado(s).`);
+      setSuccessMessage(`Exportação concluída! ${ticketsForExport.length} chamado(s) exportado(s).`);
       setTimeout(() => setSuccessMessage(''), 5000);
     } catch (error) {
       console.error('Erro ao exportar CSV:', error);
@@ -686,7 +686,7 @@ export default function AdminPage() {
                 </div>
 
                 <div className="text-xs sm:text-sm text-gray-600 bg-gray-50 p-2 sm:p-3 rounded-md">
-                  <p className="font-medium mb-1">DescriÃ§Ã£o:</p>
+                  <p className="font-medium mb-1">Descrição:</p>
                   <p className="whitespace-pre-wrap break-words">{ticket.description}</p>
                 </div>
               </div>
@@ -697,19 +697,19 @@ export default function AdminPage() {
     );
   };
 
-  // Mostrar loading enquanto verifica autenticaÃ§Ã£o
+  // Mostrar loading enquanto verifica autenticação
   if (checkingAuth) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-red-50 to-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full mx-auto"></div>
-          <p className="text-gray-600 mt-4">Verificando autenticaÃ§Ã£o...</p>
+          <p className="text-gray-600 mt-4">Verificando autenticação...</p>
         </div>
       </div>
     );
   }
 
-  // NÃ£o renderizar nada se nÃ£o estiver autenticado (serÃ¡ redirecionado)
+  // Não renderizar nada se não estiver autenticado (será redirecionado)
   if (!isAuthenticated) {
     return null;
   }
@@ -725,17 +725,17 @@ export default function AdminPage() {
                 <div className="rounded-xl bg-white/95 p-2 sm:p-3 shadow-md">
                   <img
                     src="/logogont.png"
-                    alt="Logo Gontijo Fundações"
+                    alt="Logo Gontijo Funda��es"
                     className="h-10 sm:h-12 md:h-14 w-auto object-contain"
                   />
                 </div>
                 <div>
-                  <p className="text-xs sm:text-sm text-red-100 mb-1">Logo Gontijo Fundações</p>
+                  <p className="text-xs sm:text-sm text-red-100 mb-1">Logo Gontijo Funda��es</p>
                   <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">
                     Painel Administrativo
                   </h1>
                   <p className="text-xs sm:text-sm md:text-base text-red-50">
-                    Gerencie chamados e configure notificações push
+                    Gerencie chamados e configure notifica��es push
                   </p>
                 </div>
               </div>
@@ -794,13 +794,13 @@ export default function AdminPage() {
 
               <div className="mt-4 flex flex-wrap gap-2">
                 <Button type="button" variant="outline" className="border-red-200 hover:bg-red-50" onClick={() => applyQuickRange(7)}>
-                  Últimos 7 dias
+                  �ltimos 7 dias
                 </Button>
                 <Button type="button" variant="outline" className="border-red-200 hover:bg-red-50" onClick={() => applyQuickRange(30)}>
-                  Últimos 30 dias
+                  �ltimos 30 dias
                 </Button>
                 <Button type="button" variant="outline" className="border-red-200 hover:bg-red-50" onClick={applyCurrentMonthRange}>
-                  Mês atual
+                  M�s atual
                 </Button>
                 {hasDateFilter && (
                   <Button type="button" variant="ghost" className="text-red-700 hover:text-red-800 hover:bg-red-50" onClick={clearDateFilters}>
@@ -812,10 +812,10 @@ export default function AdminPage() {
 
               <div className="mt-4 text-xs sm:text-sm">
                 <p className="text-gray-600">
-                  Período no dashboard: <span className="font-semibold text-gray-900">{dashboardPeriodLabel}</span>
+                  Per�odo no dashboard: <span className="font-semibold text-gray-900">{dashboardPeriodLabel}</span>
                 </p>
                 {isDateRangeInvalid && (
-                  <p className="text-red-600 mt-1">A data final deve ser maior ou igual à data inicial.</p>
+                  <p className="text-red-600 mt-1">A data final deve ser maior ou igual � data inicial.</p>
                 )}
               </div>
             </CardContent>
@@ -859,14 +859,14 @@ export default function AdminPage() {
             </Badge>
           </div>
 
-          {/* Cards de EstatÃ­sticas */}
+          {/* Cards de Estatísticas */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
             <Card className="border-l-4 border-l-blue-600">
               <CardContent className="pt-3 sm:pt-4 md:pt-6 px-3 sm:px-4 md:px-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                   <div className="min-w-0 flex-1">
                     <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1 truncate">
-                      {hasDateFilter ? 'Total do Período' : 'Total do Mês'}
+                      {hasDateFilter ? 'Total do Per�odo' : 'Total do M�s'}
                     </p>
                     <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{monthlyStats.total}</p>
                   </div>
@@ -903,7 +903,7 @@ export default function AdminPage() {
               <CardContent className="pt-3 sm:pt-4 md:pt-6 px-3 sm:px-4 md:px-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1 truncate">Taxa ResoluÃ§Ã£o</p>
+                    <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1 truncate">Taxa Resolução</p>
                     <p className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-600">{monthlyStats.resolutionRate}%</p>
                   </div>
                   <TrendingUp className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-purple-600 flex-shrink-0" />
@@ -912,14 +912,14 @@ export default function AdminPage() {
             </Card>
           </div>
 
-          {/* GrÃ¡ficos e AnÃ¡lises */}
+          {/* Gráficos e Análises */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
-            {/* GrÃ¡fico de Chamados por Dia */}
+            {/* Gráfico de Chamados por Dia */}
             <Card className="overflow-hidden">
               <CardHeader className="pb-2 sm:pb-4">
                 <CardTitle className="text-sm sm:text-base md:text-lg">Chamados por Dia</CardTitle>
                 <CardDescription className="text-xs sm:text-sm hidden sm:block">
-                  {hasDateFilter ? 'Distribuição diária do período filtrado' : 'Distribuição diária do mês atual'}
+                  {hasDateFilter ? 'Distribui��o di�ria do per�odo filtrado' : 'Distribui��o di�ria do m�s atual'}
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-1 sm:px-4 md:px-6 pb-2 sm:pb-4">
@@ -947,12 +947,12 @@ export default function AdminPage() {
               </CardContent>
             </Card>
 
-            {/* GrÃ¡fico de Pizza - Status */}
+            {/* Gráfico de Pizza - Status */}
             <Card className="overflow-hidden">
               <CardHeader className="pb-2 sm:pb-4">
-                <CardTitle className="text-sm sm:text-base md:text-lg">DistribuiÃ§Ã£o por Status</CardTitle>
+                <CardTitle className="text-sm sm:text-base md:text-lg">Distribuição por Status</CardTitle>
                 <CardDescription className="text-xs sm:text-sm hidden sm:block">
-                  {hasDateFilter ? 'Chamados filtrados por status' : 'Chamados do mês por status'}
+                  {hasDateFilter ? 'Chamados filtrados por status' : 'Chamados do m�s por status'}
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-1 sm:px-4 md:px-6 pb-2 sm:pb-4">
@@ -995,13 +995,13 @@ export default function AdminPage() {
             </Card>
           </div>
 
-          {/* AnÃ¡lise de Palavras-chave e MÃ©tricas */}
+          {/* Análise de Palavras-chave e Métricas */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
             {/* Principais Causas/Palavras-chave */}
             <Card>
               <CardHeader className="pb-2 sm:pb-3 md:pb-6 px-3 sm:px-4 md:px-6">
                 <CardTitle className="text-sm sm:text-base md:text-lg">Principais Termos</CardTitle>
-                <CardDescription className="text-xs sm:text-sm hidden sm:block">Palavras mais frequentes nas descriÃ§Ãµes</CardDescription>
+                <CardDescription className="text-xs sm:text-sm hidden sm:block">Palavras mais frequentes nas descrições</CardDescription>
               </CardHeader>
               <CardContent className="px-3 sm:px-4 md:px-6">
                 {monthlyStats.topKeywords.length > 0 ? (
@@ -1021,22 +1021,22 @@ export default function AdminPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-center py-4 sm:py-6 md:py-8 text-xs sm:text-sm">Nenhum dado disponÃ­vel</p>
+                  <p className="text-gray-500 text-center py-4 sm:py-6 md:py-8 text-xs sm:text-sm">Nenhum dado disponível</p>
                 )}
               </CardContent>
             </Card>
 
-            {/* MÃ©tricas de Performance */}
+            {/* Métricas de Performance */}
             <Card>
               <CardHeader className="pb-2 sm:pb-3 md:pb-6 px-3 sm:px-4 md:px-6">
-                <CardTitle className="text-sm sm:text-base md:text-lg">MÃ©tricas de Performance</CardTitle>
-                <CardDescription className="text-xs sm:text-sm hidden sm:block">EstatÃ­sticas de atendimento</CardDescription>
+                <CardTitle className="text-sm sm:text-base md:text-lg">Métricas de Performance</CardTitle>
+                <CardDescription className="text-xs sm:text-sm hidden sm:block">Estatísticas de atendimento</CardDescription>
               </CardHeader>
               <CardContent className="px-3 sm:px-4 md:px-6">
                 <div className="space-y-2 sm:space-y-3 md:space-y-4">
                   <div className="flex items-center justify-between p-2.5 sm:p-3 md:p-4 bg-blue-50 rounded-lg">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1">Tempo MÃ©dio de ResoluÃ§Ã£o</p>
+                      <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1">Tempo Médio de Resolução</p>
                       <p className="text-lg sm:text-xl md:text-2xl font-bold text-blue-600">
                         {parseFloat(monthlyStats.avgResolutionTime) > 0 
                           ? `${parseFloat(monthlyStats.avgResolutionTime)}h`
@@ -1058,7 +1058,7 @@ export default function AdminPage() {
 
                   {monthlyStats.total > 0 && (
                     <div className="p-2.5 sm:p-3 md:p-4 bg-purple-50 rounded-lg">
-                      <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-1.5 sm:mb-2">Taxa de ResoluÃ§Ã£o</p>
+                      <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-1.5 sm:mb-2">Taxa de Resolução</p>
                       <div className="w-full bg-gray-200 rounded-full h-1.5 sm:h-2 md:h-3">
                         <div 
                           className="bg-purple-600 h-1.5 sm:h-2 md:h-3 rounded-full transition-all duration-500"
@@ -1074,7 +1074,7 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* InstruÃ§Ãµes PWA */}
+        {/* Instruções PWA */}
         <Card className="mb-8 shadow-lg border-red-100">
           <CardHeader className="bg-gradient-to-r from-red-600 to-red-700 text-white">
             <CardTitle className="flex items-center gap-2">
@@ -1089,8 +1089,8 @@ export default function AdminPage() {
             <div className="text-sm text-gray-600 bg-blue-50 p-3 rounded-md">
               <p className="font-medium mb-1">Como instalar a PWA:</p>
               <ul className="list-disc list-inside space-y-1 text-xs">
-                <li>No Chrome/Edge: Clique no Ã­cone de instalaÃ§Ã£o na barra de endereÃ§o</li>
-                <li>No Safari (iOS): Toque em &quot;Compartilhar&quot; e depois &quot;Adicionar Ã  Tela de InÃ­cio&quot;</li>
+                <li>No Chrome/Edge: Clique no ícone de instalação na barra de endereço</li>
+                <li>No Safari (iOS): Toque em &quot;Compartilhar&quot; e depois &quot;Adicionar à Tela de Início&quot;</li>
                 <li>No Firefox: Clique no menu e selecione &quot;Instalar&quot;</li>
               </ul>
             </div>
@@ -1109,7 +1109,7 @@ export default function AdminPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
-            {/* FormulÃ¡rio de adicionar/editar */}
+            {/* Formulário de adicionar/editar */}
             <div className="mb-6 p-4 bg-purple-50 rounded-lg border border-purple-200">
               <h3 className="font-semibold text-gray-900 mb-4">
                 {kbEditing ? 'Editar Entrada' : 'Adicionar Nova Entrada'}
@@ -1136,17 +1136,17 @@ export default function AdminPage() {
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="kb-answer">Resposta/SoluÃ§Ã£o *</Label>
+                  <Label htmlFor="kb-answer">Resposta/Solução *</Label>
                   <Textarea
                     id="kb-answer"
                     value={kbForm.answer}
                     onChange={(e) => setKbForm({ ...kbForm, answer: e.target.value })}
-                    placeholder="Descreva a soluÃ§Ã£o passo a passo..."
+                    placeholder="Descreva a solução passo a passo..."
                     className="min-h-[100px]"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="kb-keywords">Palavras-chave (separadas por vÃ­rgula)</Label>
+                  <Label htmlFor="kb-keywords">Palavras-chave (separadas por vírgula)</Label>
                   <Input
                     id="kb-keywords"
                     value={kbForm.keywords}
@@ -1275,7 +1275,7 @@ export default function AdminPage() {
           </CardContent>
         </Card>
 
-        {/* ExportaÃ§Ã£o de Chamados */}
+        {/* Exportação de Chamados */}
         <Card className="mb-6 sm:mb-8 shadow-lg border-blue-100">
           <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 text-white">
             <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
@@ -1283,17 +1283,17 @@ export default function AdminPage() {
               Exportar Chamados
             </CardTitle>
             <CardDescription className="text-blue-50 text-sm sm:text-base">
-              Exporte os chamados do período selecionado em CSV/Excel
+              Exporte os chamados do per�odo selecionado em CSV/Excel
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="space-y-4">
               <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-3">
                 <p className="text-xs sm:text-sm text-blue-900 font-medium">
-                  Período aplicado na exportação: {dashboardPeriodLabel}
+                  Per�odo aplicado na exporta��o: {dashboardPeriodLabel}
                 </p>
                 <p className="text-xs text-blue-700 mt-1">
-                  Ajuste as datas no topo da página. A exportação segue exatamente esse filtro.
+                  Ajuste as datas no topo da p�gina. A exporta��o segue exatamente esse filtro.
                 </p>
               </div>
               
@@ -1328,11 +1328,11 @@ export default function AdminPage() {
               </div>
 
               <div className="text-xs sm:text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
-                <p className="font-medium mb-1">InformaÃ§Ãµes:</p>
+                <p className="font-medium mb-1">Informações:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Sem filtro no topo: exporta todos os chamados. Com filtro: exporta apenas o período selecionado</li>
+                  <li>Sem filtro no topo: exporta todos os chamados. Com filtro: exporta apenas o per�odo selecionado</li>
                   <li>O arquivo CSV pode ser aberto no Excel, Google Sheets ou qualquer editor de planilhas</li>
-                  <li>O arquivo inclui: ID, Email, DescriÃ§Ã£o, Status, Data de CriaÃ§Ã£o e Data de AtualizaÃ§Ã£o</li>
+                  <li>O arquivo inclui: ID, Email, Descrição, Status, Data de Criação e Data de Atualização</li>
                 </ul>
               </div>
             </div>
