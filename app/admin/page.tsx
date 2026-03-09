@@ -20,11 +20,12 @@ import {
   Activity,
   Download,
   Calendar,
+  Filter,
   Brain,
-  Plus,
   Edit,
   Trash2,
-  Search
+  Search,
+  X
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -292,6 +293,69 @@ export default function AdminPage() {
     });
   };
 
+  const formatDateOnly = (dateString: string) => {
+    return new Date(`${dateString}T00:00:00`).toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  const formatDateToInput = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  const hasDateFilter = Boolean(startDate || endDate);
+  const isDateRangeInvalid = Boolean(
+    startDate &&
+      endDate &&
+      new Date(`${startDate}T00:00:00`).getTime() > new Date(`${endDate}T23:59:59.999`).getTime()
+  );
+
+  const clearDateFilters = () => {
+    setStartDate('');
+    setEndDate('');
+  };
+
+  const applyQuickRange = (days: number) => {
+    const end = new Date();
+    const start = new Date();
+    start.setDate(start.getDate() - (days - 1));
+
+    setStartDate(formatDateToInput(start));
+    setEndDate(formatDateToInput(end));
+  };
+
+  const applyCurrentMonthRange = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), 1);
+
+    setStartDate(formatDateToInput(start));
+    setEndDate(formatDateToInput(now));
+  };
+
+  const filteredTickets = useMemo(() => {
+    if (!hasDateFilter) {
+      return tickets;
+    }
+    if (isDateRangeInvalid) {
+      return [];
+    }
+
+    const start = startDate ? new Date(`${startDate}T00:00:00`) : null;
+    const end = endDate ? new Date(`${endDate}T23:59:59.999`) : null;
+
+    return tickets.filter(ticket => {
+      const ticketDate = new Date(ticket.created_at);
+      if (start && ticketDate < start) return false;
+      if (end && ticketDate > end) return false;
+      return true;
+    });
+  }, [tickets, startDate, endDate, hasDateFilter, isDateRangeInvalid]);
+
   // Obter cor do badge de status
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -308,60 +372,118 @@ export default function AdminPage() {
 
   // Filtrar tickets por status usando useMemo para garantir recálculo quando tickets mudarem
   const openTickets = useMemo(() => {
-    return tickets.filter(ticket => {
+    return filteredTickets.filter(ticket => {
       const status = (ticket.status || '').toLowerCase().trim();
       return status !== 'resolvido';
     });
-  }, [tickets]);
+  }, [filteredTickets]);
 
   const resolvedTickets = useMemo(() => {
-    return tickets.filter(ticket => {
+    return filteredTickets.filter(ticket => {
       const status = (ticket.status || '').toLowerCase().trim();
       return status === 'resolvido';
     });
-  }, [tickets]);
+  }, [filteredTickets]);
 
-  // Estatísticas do mês atual
-  const monthlyStats = useMemo(() => {
+  const dashboardTickets = useMemo(() => {
+    if (isDateRangeInvalid) {
+      return [];
+    }
+    if (hasDateFilter) {
+      return filteredTickets;
+    }
+
     const now = new Date();
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    
-    const monthTickets = tickets.filter(ticket => {
+    return tickets.filter(ticket => {
       const ticketDate = new Date(ticket.created_at);
       return ticketDate >= startOfMonth;
     });
+  }, [tickets, filteredTickets, hasDateFilter, isDateRangeInvalid]);
+
+  const dashboardPeriodLabel = useMemo(() => {
+    if (isDateRangeInvalid) {
+      return 'Período inválido';
+    }
+    if (startDate && endDate) {
+      return `${formatDateOnly(startDate)} a ${formatDateOnly(endDate)}`;
+    }
+    if (startDate) {
+      return `Desde ${formatDateOnly(startDate)}`;
+    }
+    if (endDate) {
+      return `Até ${formatDateOnly(endDate)}`;
+    }
+    return new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+  }, [startDate, endDate, isDateRangeInvalid]);
+
+  // Estatísticas do mês atual
+  const monthlyStats = useMemo(() => {
+    const monthTickets = dashboardTickets;
 
     const monthResolved = monthTickets.filter(t => t.status === 'resolvido');
-    const monthOpen = monthTickets.filter(t => t.status !== 'resolvido');
-    
-    // Chamados por dia do mês
-    const ticketsByDay: { [key: number]: number } = {};
+    const monthInProgress = monthTickets.filter(t => t.status === 'em_andamento');
+    const monthOpen = monthTickets.filter(t => t.status === 'aberto');
+
+    const ticketsByDay: { [key: string]: number } = {};
     monthTickets.forEach(ticket => {
-      const day = new Date(ticket.created_at).getDate();
-      ticketsByDay[day] = (ticketsByDay[day] || 0) + 1;
+      const ticketDate = new Date(ticket.created_at);
+      const key = formatDateToInput(ticketDate);
+      ticketsByDay[key] = (ticketsByDay[key] || 0) + 1;
     });
 
-    const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-    const chartData = Array.from({ length: daysInMonth }, (_, i) => ({
-      dia: i + 1,
-      chamados: ticketsByDay[i + 1] || 0
-    }));
+    let chartData: { periodo: string; chamados: number }[] = [];
 
-    // Distribuição por status
+    if (hasDateFilter && !isDateRangeInvalid) {
+      const firstTicketDate = monthTickets.length > 0
+        ? new Date(Math.min(...monthTickets.map(t => new Date(t.created_at).getTime())))
+        : new Date();
+      const lastTicketDate = monthTickets.length > 0
+        ? new Date(Math.max(...monthTickets.map(t => new Date(t.created_at).getTime())))
+        : new Date();
+
+      const periodStart = startDate ? new Date(`${startDate}T00:00:00`) : firstTicketDate;
+      const periodEnd = endDate ? new Date(`${endDate}T00:00:00`) : lastTicketDate;
+
+      const cursor = new Date(periodStart);
+      cursor.setHours(0, 0, 0, 0);
+      periodEnd.setHours(0, 0, 0, 0);
+
+      while (cursor <= periodEnd) {
+        const key = formatDateToInput(cursor);
+        chartData.push({
+          periodo: cursor.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+          chamados: ticketsByDay[key] || 0
+        });
+        cursor.setDate(cursor.getDate() + 1);
+      }
+    } else {
+      const now = new Date();
+      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+      chartData = Array.from({ length: daysInMonth }, (_, i) => {
+        const current = new Date(now.getFullYear(), now.getMonth(), i + 1);
+        const key = formatDateToInput(current);
+        return {
+          periodo: String(i + 1),
+          chamados: ticketsByDay[key] || 0
+        };
+      });
+    }
+
     const statusData = [
       { name: 'Resolvidos', value: monthResolved.length, color: '#16a34a' },
       { name: 'Em Aberto', value: monthOpen.length, color: '#dc2626' },
-      { name: 'Em Andamento', value: monthTickets.filter(t => t.status === 'em_andamento').length, color: '#ca8a04' }
+      { name: 'Em Andamento', value: monthInProgress.length, color: '#ca8a04' }
     ];
 
-    // Análise de palavras-chave (principais termos nas descrições)
     const wordCount: { [key: string]: number } = {};
     monthTickets.forEach(ticket => {
       const words = ticket.description.toLowerCase()
         .replace(/[^\w\s]/g, ' ')
         .split(/\s+/)
-        .filter(w => w.length > 4); // Palavras com mais de 4 caracteres
-      
+        .filter(w => w.length > 4);
+
       words.forEach(word => {
         wordCount[word] = (wordCount[word] || 0) + 1;
       });
@@ -372,13 +494,11 @@ export default function AdminPage() {
       .slice(0, 5)
       .map(([word, count]) => ({ word, count }));
 
-    // Tempo médio de resolução (em horas)
     const resolvedWithTime = monthResolved
       .map(ticket => {
         const created = new Date(ticket.created_at);
         const updated = new Date(ticket.updated_at);
-        const hours = (updated.getTime() - created.getTime()) / (1000 * 60 * 60);
-        return hours;
+        return (updated.getTime() - created.getTime()) / (1000 * 60 * 60);
       })
       .filter(hours => hours > 0);
 
@@ -389,8 +509,8 @@ export default function AdminPage() {
     return {
       total: monthTickets.length,
       resolved: monthResolved.length,
-      open: monthOpen.length,
-      resolutionRate: monthTickets.length > 0 
+      open: monthOpen.length + monthInProgress.length,
+      resolutionRate: monthTickets.length > 0
         ? ((monthResolved.length / monthTickets.length) * 100).toFixed(1)
         : '0',
       chartData,
@@ -398,7 +518,7 @@ export default function AdminPage() {
       topKeywords,
       avgResolutionTime: avgResolutionTime.toFixed(1)
     };
-  }, [tickets]);
+  }, [dashboardTickets, hasDateFilter, isDateRangeInvalid, startDate, endDate]);
 
   // Função para exportar chamados para CSV
   const exportToCSV = () => {
@@ -406,41 +526,15 @@ export default function AdminPage() {
     setError('');
     
     try {
-      // Validar datas
-      if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-        setError('A data final deve ser maior ou igual à data inicial.');
+      if (isDateRangeInvalid) {
+        setError('A data final deve ser maior ou igual � data inicial.');
         setExporting(false);
         return;
       }
 
-      // Filtrar tickets por período se as datas estiverem definidas
-      let filteredTickets = tickets;
-      
-      if (startDate || endDate) {
-        filteredTickets = tickets.filter(ticket => {
-          const ticketDate = new Date(ticket.created_at);
-          ticketDate.setHours(0, 0, 0, 0);
-          
-          if (startDate && endDate) {
-            const start = new Date(startDate);
-            start.setHours(0, 0, 0, 0);
-            const end = new Date(endDate);
-            end.setHours(23, 59, 59, 999);
-            return ticketDate >= start && ticketDate <= end;
-          } else if (startDate) {
-            const start = new Date(startDate);
-            start.setHours(0, 0, 0, 0);
-            return ticketDate >= start;
-          } else if (endDate) {
-            const end = new Date(endDate);
-            end.setHours(23, 59, 59, 999);
-            return ticketDate <= end;
-          }
-          return true;
-        });
-      }
+      const ticketsForExport = filteredTickets;
 
-      if (filteredTickets.length === 0) {
+      if (ticketsForExport.length === 0) {
         setError('Nenhum chamado encontrado para o período selecionado.');
         setExporting(false);
         return;
@@ -451,7 +545,7 @@ export default function AdminPage() {
       const separator = ';';
       const csvHeaders = ['ID', 'Email', 'Descrição', 'Status', 'Data de Criação', 'Data de Atualização'];
       
-      const csvRows = filteredTickets.map(ticket => {
+      const csvRows = ticketsForExport.map(ticket => {
         const createdDate = new Date(ticket.created_at).toLocaleString('pt-BR', {
           day: '2-digit',
           month: '2-digit',
@@ -531,7 +625,7 @@ export default function AdminPage() {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      setSuccessMessage(`Exportação concluída! ${filteredTickets.length} chamado(s) exportado(s).`);
+      setSuccessMessage(`Exportação concluída! ${ticketsForExport.length} chamado(s) exportado(s).`);
       setTimeout(() => setSuccessMessage(''), 5000);
     } catch (error) {
       console.error('Erro ao exportar CSV:', error);
@@ -623,31 +717,109 @@ export default function AdminPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-white">
       <div className="container mx-auto px-4 py-8">
-        {/* Header */}
-        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-2 sm:gap-4">
-            <img 
-              src="/logogont.png" 
-              alt="Logo Gontijo Fundações" 
-              className="h-12 sm:h-14 md:h-16 w-auto object-contain"
-            />
-            <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">
-                Painel Administrativo
-              </h1>
-              <p className="text-sm sm:text-base text-gray-600 hidden sm:block">
-                Gerencie chamados e configure notificações push
-              </p>
+        {/* Header + Filtros */}
+        <div className="mb-6 sm:mb-8">
+          <div className="rounded-2xl border border-red-100 bg-gradient-to-r from-red-600 via-red-600 to-orange-500 p-4 sm:p-6 shadow-lg">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="rounded-xl bg-white/95 p-2 sm:p-3 shadow-md">
+                  <img
+                    src="/logogont.png"
+                    alt="Logo Gontijo Funda��es"
+                    className="h-10 sm:h-12 md:h-14 w-auto object-contain"
+                  />
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm text-red-100 mb-1">Logo Gontijo Funda��es</p>
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">
+                    Painel Administrativo
+                  </h1>
+                  <p className="text-xs sm:text-sm md:text-base text-red-50">
+                    Gerencie chamados e configure notifica��es push
+                  </p>
+                </div>
+              </div>
+              <Button
+                onClick={handleLogout}
+                variant="outline"
+                className="bg-white/95 border-white text-red-700 hover:bg-white w-full sm:w-auto"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sair
+              </Button>
             </div>
           </div>
-          <Button
-            onClick={handleLogout}
-            variant="outline"
-            className="border-red-200 text-red-700 hover:bg-red-50 w-full sm:w-auto text-sm sm:text-base"
-          >
-            <LogOut className="w-4 h-4 mr-2" />
-            Sair
-          </Button>
+
+          <Card className="mt-4 border-red-100 shadow-md">
+            <CardContent className="pt-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div className="flex items-center gap-2 text-gray-900">
+                  <Filter className="w-4 h-4 text-red-600" />
+                  <p className="text-sm sm:text-base font-semibold">Filtro de datas</p>
+                </div>
+                {hasDateFilter && (
+                  <Badge className="bg-red-100 text-red-700 hover:bg-red-100">
+                    Filtro ativo
+                  </Badge>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="topStartDate" className="text-xs sm:text-sm font-medium flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-red-600" />
+                    Data inicial
+                  </Label>
+                  <Input
+                    id="topStartDate"
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="topEndDate" className="text-xs sm:text-sm font-medium flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-red-600" />
+                    Data final
+                  </Label>
+                  <Input
+                    id="topEndDate"
+                    type="date"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                    min={startDate || undefined}
+                  />
+                </div>
+              </div>
+
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Button type="button" variant="outline" className="border-red-200 hover:bg-red-50" onClick={() => applyQuickRange(7)}>
+                  �ltimos 7 dias
+                </Button>
+                <Button type="button" variant="outline" className="border-red-200 hover:bg-red-50" onClick={() => applyQuickRange(30)}>
+                  �ltimos 30 dias
+                </Button>
+                <Button type="button" variant="outline" className="border-red-200 hover:bg-red-50" onClick={applyCurrentMonthRange}>
+                  M�s atual
+                </Button>
+                {hasDateFilter && (
+                  <Button type="button" variant="ghost" className="text-red-700 hover:text-red-800 hover:bg-red-50" onClick={clearDateFilters}>
+                    <X className="w-4 h-4 mr-1.5" />
+                    Limpar filtro
+                  </Button>
+                )}
+              </div>
+
+              <div className="mt-4 text-xs sm:text-sm">
+                <p className="text-gray-600">
+                  Per�odo no dashboard: <span className="font-semibold text-gray-900">{dashboardPeriodLabel}</span>
+                </p>
+                {isDateRangeInvalid && (
+                  <p className="text-red-600 mt-1">A data final deve ser maior ou igual � data inicial.</p>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Alerts */}
@@ -671,13 +843,20 @@ export default function AdminPage() {
 
         {/* Dashboard Analytics */}
         <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-2 mb-4 sm:mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4 sm:mb-6">
+            <div className="flex items-center gap-2">
             <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6 text-red-600" />
             <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
               <span className="hidden sm:inline">Dashboard - </span>
               <span className="sm:hidden">Dashboard</span>
-              <span className="hidden sm:inline">{new Date().toLocaleString('pt-BR', { month: 'long', year: 'numeric' })}</span>
+              <span className="hidden sm:inline">{dashboardPeriodLabel}</span>
             </h2>
+            </div>
+            <Badge variant="outline" className="w-fit border-red-200 text-red-700">
+              {hasDateFilter
+                ? `${filteredTickets.length} chamado(s) no filtro`
+                : `${tickets.length} chamado(s) no total`}
+            </Badge>
           </div>
 
           {/* Cards de Estatísticas */}
@@ -686,7 +865,9 @@ export default function AdminPage() {
               <CardContent className="pt-3 sm:pt-4 md:pt-6 px-3 sm:px-4 md:px-6">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1 truncate">Total do Mês</p>
+                    <p className="text-[10px] sm:text-xs md:text-sm text-gray-600 mb-0.5 sm:mb-1 truncate">
+                      {hasDateFilter ? 'Total do Per�odo' : 'Total do M�s'}
+                    </p>
                     <p className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">{monthlyStats.total}</p>
                   </div>
                   <Activity className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-blue-600 flex-shrink-0" />
@@ -736,8 +917,10 @@ export default function AdminPage() {
             {/* Gráfico de Chamados por Dia */}
             <Card className="overflow-hidden">
               <CardHeader className="pb-2 sm:pb-4">
-                <CardTitle className="text-sm sm:text-base md:text-lg">Chamados por Dia do Mês</CardTitle>
-                <CardDescription className="text-xs sm:text-sm hidden sm:block">Distribuição diária de chamados criados</CardDescription>
+                <CardTitle className="text-sm sm:text-base md:text-lg">Chamados por Dia</CardTitle>
+                <CardDescription className="text-xs sm:text-sm hidden sm:block">
+                  {hasDateFilter ? 'Distribui��o di�ria do per�odo filtrado' : 'Distribui��o di�ria do m�s atual'}
+                </CardDescription>
               </CardHeader>
               <CardContent className="px-1 sm:px-4 md:px-6 pb-2 sm:pb-4">
                 <div className="w-full" style={{ height: '200px' }}>
@@ -745,9 +928,9 @@ export default function AdminPage() {
                     <BarChart data={monthlyStats.chartData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" />
                       <XAxis 
-                        dataKey="dia" 
+                        dataKey="periodo" 
                         tick={{ fontSize: 10 }}
-                        interval={2}
+                        interval={monthlyStats.chartData.length > 15 ? 2 : 0}
                         minTickGap={5}
                       />
                       <YAxis 
@@ -768,7 +951,9 @@ export default function AdminPage() {
             <Card className="overflow-hidden">
               <CardHeader className="pb-2 sm:pb-4">
                 <CardTitle className="text-sm sm:text-base md:text-lg">Distribuição por Status</CardTitle>
-                <CardDescription className="text-xs sm:text-sm hidden sm:block">Chamados do mês por status</CardDescription>
+                <CardDescription className="text-xs sm:text-sm hidden sm:block">
+                  {hasDateFilter ? 'Chamados filtrados por status' : 'Chamados do m�s por status'}
+                </CardDescription>
               </CardHeader>
               <CardContent className="px-1 sm:px-4 md:px-6 pb-2 sm:pb-4">
                 <div className="w-full" style={{ height: '200px' }}>
@@ -905,8 +1090,8 @@ export default function AdminPage() {
               <p className="font-medium mb-1">Como instalar a PWA:</p>
               <ul className="list-disc list-inside space-y-1 text-xs">
                 <li>No Chrome/Edge: Clique no ícone de instalação na barra de endereço</li>
-                <li>No Safari (iOS): Toque em "Compartilhar" e depois "Adicionar à Tela de Início"</li>
-                <li>No Firefox: Clique no menu e selecione "Instalar"</li>
+                <li>No Safari (iOS): Toque em &quot;Compartilhar&quot; e depois &quot;Adicionar à Tela de Início&quot;</li>
+                <li>No Firefox: Clique no menu e selecione &quot;Instalar&quot;</li>
               </ul>
             </div>
           </CardContent>
@@ -1098,55 +1283,24 @@ export default function AdminPage() {
               Exportar Chamados
             </CardTitle>
             <CardDescription className="text-blue-50 text-sm sm:text-base">
-              Filtre por período e exporte os chamados para CSV/Excel
+              Exporte os chamados do per�odo selecionado em CSV/Excel
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
             <div className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="startDate" className="text-sm font-medium flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    Data Inicial
-                  </Label>
-                  <Input
-                    id="startDate"
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full"
-                  />
-                  {startDate && (
-                    <p className="text-xs text-gray-500">
-                      {new Date(startDate).toLocaleDateString('pt-BR')}
-                    </p>
-                  )}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="endDate" className="text-sm font-medium flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    Data Final
-                  </Label>
-                  <Input
-                    id="endDate"
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    min={startDate || undefined}
-                    className="w-full"
-                  />
-                  {endDate && (
-                    <p className="text-xs text-gray-500">
-                      {new Date(endDate).toLocaleDateString('pt-BR')}
-                    </p>
-                  )}
-                </div>
+              <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-3">
+                <p className="text-xs sm:text-sm text-blue-900 font-medium">
+                  Per�odo aplicado na exporta��o: {dashboardPeriodLabel}
+                </p>
+                <p className="text-xs text-blue-700 mt-1">
+                  Ajuste as datas no topo da p�gina. A exporta��o segue exatamente esse filtro.
+                </p>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   onClick={exportToCSV}
-                  disabled={exporting || loading}
+                  disabled={exporting || loading || isDateRangeInvalid}
                   className="bg-blue-600 hover:bg-blue-700 text-white flex-1 sm:flex-none"
                 >
                   {exporting ? (
@@ -1164,14 +1318,11 @@ export default function AdminPage() {
                 
                 {(startDate || endDate) && (
                   <Button
-                    onClick={() => {
-                      setStartDate('');
-                      setEndDate('');
-                    }}
+                    onClick={clearDateFilters}
                     variant="outline"
                     className="flex-1 sm:flex-none"
                   >
-                    Limpar Filtros
+                    Limpar Filtro de Data
                   </Button>
                 )}
               </div>
@@ -1179,7 +1330,7 @@ export default function AdminPage() {
               <div className="text-xs sm:text-sm text-gray-600 bg-gray-50 p-3 rounded-md">
                 <p className="font-medium mb-1">Informações:</p>
                 <ul className="list-disc list-inside space-y-1">
-                  <li>Deixe os campos vazios para exportar todos os chamados</li>
+                  <li>Sem filtro no topo: exporta todos os chamados. Com filtro: exporta apenas o per�odo selecionado</li>
                   <li>O arquivo CSV pode ser aberto no Excel, Google Sheets ou qualquer editor de planilhas</li>
                   <li>O arquivo inclui: ID, Email, Descrição, Status, Data de Criação e Data de Atualização</li>
                 </ul>
@@ -1255,3 +1406,4 @@ export default function AdminPage() {
     </div>
   );
 }
+
