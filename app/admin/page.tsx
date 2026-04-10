@@ -25,7 +25,11 @@ import {
   Edit,
   Trash2,
   Search,
-  X
+  X,
+  Sparkles,
+  Cloud,
+  CalendarDays,
+  Flame
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -520,6 +524,107 @@ export default function AdminPage() {
     };
   }, [dashboardTickets, hasDateFilter, isDateRangeInvalid, startDate, endDate]);
 
+  const analysisStats = useMemo(() => {
+    if (tickets.length === 0) {
+      return {
+        total: 0,
+        resolved: 0,
+        open: 0,
+        firstDate: null as Date | null,
+        lastDate: null as Date | null,
+        daysRange: 0,
+        avgPerDay: '0',
+        mostActiveDay: null as { date: string; count: number } | null,
+        chartData: [] as { periodo: string; fullDate: string; chamados: number }[],
+        wordCloud: [] as { word: string; count: number; size: number; tilt: number }[]
+      };
+    }
+
+    const createdTimes = tickets.map(t => new Date(t.created_at).getTime());
+    const firstDate = new Date(Math.min(...createdTimes));
+    const lastDate = new Date(Math.max(...createdTimes));
+
+    const ticketsByDay: { [key: string]: number } = {};
+    tickets.forEach(ticket => {
+      const ticketDate = new Date(ticket.created_at);
+      const key = formatDateToInput(ticketDate);
+      ticketsByDay[key] = (ticketsByDay[key] || 0) + 1;
+    });
+
+    const chartData: { periodo: string; fullDate: string; chamados: number }[] = [];
+    const start = new Date(firstDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(lastDate);
+    end.setHours(0, 0, 0, 0);
+
+    const cursor = new Date(start);
+
+    while (cursor <= end) {
+      const key = formatDateToInput(cursor);
+      chartData.push({
+        periodo: cursor.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }),
+        fullDate: cursor.toLocaleDateString('pt-BR'),
+        chamados: ticketsByDay[key] || 0
+      });
+      cursor.setDate(cursor.getDate() + 1);
+    }
+
+    let mostActiveDay: { date: string; count: number } | null = null;
+    Object.entries(ticketsByDay).forEach(([date, count]) => {
+      if (!mostActiveDay || count > mostActiveDay.count) {
+        mostActiveDay = { date, count };
+      }
+    });
+
+    const wordCount: { [key: string]: number } = {};
+    tickets.forEach(ticket => {
+      const words = ticket.description.toLowerCase()
+        .replace(/[^\w\s]/g, ' ')
+        .split(/\s+/)
+        .filter(w => w.length > 3);
+
+      words.forEach(word => {
+        wordCount[word] = (wordCount[word] || 0) + 1;
+      });
+    });
+
+    const topWords = Object.entries(wordCount)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 40)
+      .map(([word, count]) => ({ word, count }));
+
+    const maxCount = topWords.length > 0 ? Math.max(...topWords.map(w => w.count)) : 1;
+    const minCount = topWords.length > 0 ? Math.min(...topWords.map(w => w.count)) : 1;
+
+    const wordCloud = topWords.map((item, index) => {
+      const weight = maxCount === minCount ? 0.5 : (item.count - minCount) / (maxCount - minCount);
+      return {
+        word: item.word,
+        count: item.count,
+        size: 12 + weight * 26,
+        tilt: index % 3 === 0 ? -6 : index % 3 === 1 ? 0 : 6
+      };
+    });
+
+    const resolved = tickets.filter(t => t.status === 'resolvido').length;
+    const open = tickets.filter(t => t.status !== 'resolvido').length;
+    const daysRange = Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+    const avgPerDay = daysRange > 0 ? (tickets.length / daysRange).toFixed(1) : '0';
+
+    return {
+      total: tickets.length,
+      resolved,
+      open,
+      firstDate,
+      lastDate,
+      daysRange,
+      avgPerDay,
+      mostActiveDay,
+      chartData,
+      wordCloud
+    };
+  }, [tickets]);
+
   // Função para exportar chamados para CSV
   const exportToCSV = () => {
     setExporting(true);
@@ -697,6 +802,10 @@ export default function AdminPage() {
     );
   };
 
+  const analysisPeriodLabel = analysisStats.firstDate && analysisStats.lastDate
+    ? `${analysisStats.firstDate.toLocaleDateString('pt-BR')} a ${analysisStats.lastDate.toLocaleDateString('pt-BR')}`
+    : 'Sem dados';
+
   // Mostrar loading enquanto verifica autenticação
   if (checkingAuth) {
     return (
@@ -859,6 +968,23 @@ export default function AdminPage() {
             </Badge>
           </div>
 
+          <Tabs defaultValue="dashboard" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6 h-auto">
+              <TabsTrigger 
+                value="dashboard" 
+                className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-xs sm:text-sm py-2 sm:py-1.5"
+              >
+                Resumo do período
+              </TabsTrigger>
+              <TabsTrigger 
+                value="analise" 
+                className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-xs sm:text-sm py-2 sm:py-1.5"
+              >
+                Análise completa
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="dashboard" className="mt-0">
           {/* Cards de Estatísticas */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6">
             <Card className="border-l-4 border-l-blue-600">
@@ -1072,6 +1198,138 @@ export default function AdminPage() {
               </CardContent>
             </Card>
           </div>
+            </TabsContent>
+
+            <TabsContent value="analise" className="mt-0">
+              <Card className="mb-4 sm:mb-6 border-red-100 shadow-lg overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-red-600 via-orange-500 to-amber-400 text-white">
+                  <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+                    <Sparkles className="w-5 h-5 sm:w-6 sm:h-6" />
+                    Análise completa dos chamados
+                  </CardTitle>
+                  <CardDescription className="text-red-50 text-sm sm:text-base">
+                    Período total: {analysisPeriodLabel}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-5 sm:pt-6">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <div className="rounded-xl border border-red-100 bg-white p-3 sm:p-4 shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] sm:text-xs text-gray-500 mb-1">Total de chamados</p>
+                          <p className="text-xl sm:text-2xl font-bold text-gray-900">{analysisStats.total}</p>
+                        </div>
+                        <Cloud className="w-6 h-6 text-red-500" />
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-blue-100 bg-white p-3 sm:p-4 shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] sm:text-xs text-gray-500 mb-1">Média por dia</p>
+                          <p className="text-xl sm:text-2xl font-bold text-blue-600">{analysisStats.avgPerDay}</p>
+                        </div>
+                        <Activity className="w-6 h-6 text-blue-500" />
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-green-100 bg-white p-3 sm:p-4 shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] sm:text-xs text-gray-500 mb-1">Resolvidos</p>
+                          <p className="text-xl sm:text-2xl font-bold text-green-600">{analysisStats.resolved}</p>
+                        </div>
+                        <CheckCircle2 className="w-6 h-6 text-green-500" />
+                      </div>
+                    </div>
+                    <div className="rounded-xl border border-amber-100 bg-white p-3 sm:p-4 shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] sm:text-xs text-gray-500 mb-1">Dia mais intenso</p>
+                          <p className="text-base sm:text-lg font-semibold text-amber-700">
+                            {analysisStats.mostActiveDay ? formatDateOnly(analysisStats.mostActiveDay.date) : 'N/A'}
+                          </p>
+                        </div>
+                        <Flame className="w-6 h-6 text-amber-500" />
+                      </div>
+                      <p className="text-[10px] sm:text-xs text-amber-700 mt-1">
+                        {analysisStats.mostActiveDay ? `${analysisStats.mostActiveDay.count} chamados` : 'Sem dados'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
+                <Card className="overflow-hidden">
+                  <CardHeader className="pb-2 sm:pb-4">
+                    <CardTitle className="text-sm sm:text-base md:text-lg flex items-center gap-2">
+                      <CalendarDays className="w-4 h-4 text-red-600" />
+                      Chamados diários desde o primeiro registro
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm hidden sm:block">
+                      Linha completa do histórico com dias sem chamados
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="px-1 sm:px-4 md:px-6 pb-2 sm:pb-4">
+                    {analysisStats.chartData.length > 0 ? (
+                      <div className="w-full" style={{ height: '240px' }}>
+                        <ResponsiveContainer width="100%" height="100%">
+                          <LineChart data={analysisStats.chartData} margin={{ top: 5, right: 10, left: -10, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              dataKey="periodo"
+                              tick={{ fontSize: 10 }}
+                              interval={analysisStats.chartData.length > 60 ? 7 : 3}
+                              minTickGap={5}
+                            />
+                            <YAxis tick={{ fontSize: 10 }} width={30} />
+                            <Tooltip
+                              contentStyle={{ fontSize: '12px', padding: '8px' }}
+                              labelFormatter={(_, payload) => payload?.[0]?.payload?.fullDate || ''}
+                            />
+                            <Line type="monotone" dataKey="chamados" stroke="#ef4444" strokeWidth={2} dot={false} />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-6 text-xs sm:text-sm">Nenhum dado disponível</p>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="overflow-hidden">
+                  <CardHeader className="pb-2 sm:pb-4">
+                    <CardTitle className="text-sm sm:text-base md:text-lg flex items-center gap-2">
+                      <Cloud className="w-4 h-4 text-blue-600" />
+                      Nuvem de palavras
+                    </CardTitle>
+                    <CardDescription className="text-xs sm:text-sm hidden sm:block">
+                      Termos mais frequentes em todos os chamados
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="px-3 sm:px-4 md:px-6 pb-3 sm:pb-4">
+                    {analysisStats.wordCloud.length > 0 ? (
+                      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 bg-gradient-to-br from-blue-50 via-white to-red-50 rounded-xl p-3 sm:p-4 border border-blue-100">
+                        {analysisStats.wordCloud.map((item, index) => (
+                          <span
+                            key={`${item.word}-${index}`}
+                            className="px-2 py-1 rounded-full border border-white/70 bg-white/80 text-gray-700 shadow-sm"
+                            style={{
+                              fontSize: `${item.size}px`,
+                              transform: `rotate(${item.tilt}deg)`
+                            }}
+                          >
+                            {item.word}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-gray-500 text-center py-6 text-xs sm:text-sm">Nenhum dado disponível</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/* Instruções PWA */}
