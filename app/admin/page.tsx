@@ -29,12 +29,15 @@ import {
   Sparkles,
   Cloud,
   CalendarDays,
-  Flame
+  Flame,
+  Trophy,
+  Star,
+  Zap
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
 import { supabase, Ticket } from '@/lib/supabase';
 import { registerServiceWorker } from '@/lib/service-worker';
 
@@ -969,18 +972,24 @@ export default function AdminPage() {
           </div>
 
           <Tabs defaultValue="dashboard" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-4 sm:mb-6 h-auto">
-              <TabsTrigger 
-                value="dashboard" 
+            <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6 h-auto">
+              <TabsTrigger
+                value="dashboard"
                 className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-xs sm:text-sm py-2 sm:py-1.5"
               >
                 Resumo do período
               </TabsTrigger>
-              <TabsTrigger 
-                value="analise" 
+              <TabsTrigger
+                value="analise"
                 className="data-[state=active]:bg-red-600 data-[state=active]:text-white text-xs sm:text-sm py-2 sm:py-1.5"
               >
                 Análise completa
+              </TabsTrigger>
+              <TabsTrigger
+                value="marco100"
+                className="data-[state=active]:bg-amber-500 data-[state=active]:text-white text-xs sm:text-sm py-2 sm:py-1.5 font-semibold"
+              >
+                🏆 100 Chamados
               </TabsTrigger>
             </TabsList>
 
@@ -1327,6 +1336,149 @@ export default function AdminPage() {
                     )}
                   </CardContent>
                 </Card>
+              </div>
+            </TabsContent>
+
+            {/* ── MARCO 100 CHAMADOS ── */}
+            <TabsContent value="marco100" className="mt-0">
+              {/* Hero banner */}
+              <div className="relative rounded-2xl overflow-hidden mb-6 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-400 via-orange-500 to-red-600" />
+                <div className="absolute inset-0 opacity-20"
+                  style={{
+                    backgroundImage: 'radial-gradient(circle at 20% 50%, white 1px, transparent 1px), radial-gradient(circle at 80% 20%, white 1px, transparent 1px)',
+                    backgroundSize: '40px 40px'
+                  }}
+                />
+                <div className="relative px-6 py-10 sm:py-14 text-center text-white">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <Star className="w-7 h-7 text-yellow-200 fill-yellow-200" />
+                    <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-yellow-200 drop-shadow-lg" />
+                    <Star className="w-7 h-7 text-yellow-200 fill-yellow-200" />
+                  </div>
+                  <h1 className="text-5xl sm:text-7xl font-black tracking-tight mb-2 drop-shadow-md">
+                    {analysisStats.total}
+                  </h1>
+                  <p className="text-xl sm:text-2xl font-bold text-white/90 mb-1">chamados registrados</p>
+                  <p className="text-sm sm:text-base text-white/70">
+                    {analysisStats.firstDate
+                      ? `Desde ${analysisStats.firstDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}`
+                      : ''}
+                  </p>
+                </div>
+              </div>
+
+              {/* Stats cards */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-6">
+                <div className="rounded-2xl bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 p-4 sm:p-5 shadow-sm flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-amber-600 mb-1">
+                    <Trophy className="w-4 h-4" />
+                    <span className="text-xs font-semibold uppercase tracking-wide">Total</span>
+                  </div>
+                  <p className="text-3xl sm:text-4xl font-black text-amber-700">{analysisStats.total}</p>
+                  <p className="text-xs text-amber-500">chamados abertos</p>
+                </div>
+                <div className="rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 p-4 sm:p-5 shadow-sm flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-blue-600 mb-1">
+                    <CalendarDays className="w-4 h-4" />
+                    <span className="text-xs font-semibold uppercase tracking-wide">Período</span>
+                  </div>
+                  <p className="text-3xl sm:text-4xl font-black text-blue-700">{analysisStats.daysRange}</p>
+                  <p className="text-xs text-blue-500">dias de histórico</p>
+                </div>
+                <div className="rounded-2xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 p-4 sm:p-5 shadow-sm flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-green-600 mb-1">
+                    <Zap className="w-4 h-4" />
+                    <span className="text-xs font-semibold uppercase tracking-wide">Média/dia</span>
+                  </div>
+                  <p className="text-3xl sm:text-4xl font-black text-green-700">{analysisStats.avgPerDay}</p>
+                  <p className="text-xs text-green-500">chamados por dia</p>
+                </div>
+                <div className="rounded-2xl bg-gradient-to-br from-red-50 to-rose-50 border border-red-200 p-4 sm:p-5 shadow-sm flex flex-col gap-1">
+                  <div className="flex items-center gap-2 text-red-600 mb-1">
+                    <Flame className="w-4 h-4" />
+                    <span className="text-xs font-semibold uppercase tracking-wide">Dia top</span>
+                  </div>
+                  <p className="text-xl sm:text-2xl font-black text-red-700 leading-tight">
+                    {analysisStats.mostActiveDay ? formatDateOnly(analysisStats.mostActiveDay.date) : '—'}
+                  </p>
+                  <p className="text-xs text-red-500">
+                    {analysisStats.mostActiveDay ? `${analysisStats.mostActiveDay.count} chamados` : 'sem dados'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Full daily chart */}
+              <div className="rounded-2xl border border-amber-100 bg-white shadow-lg overflow-hidden mb-6">
+                <div className="px-5 pt-5 pb-2 border-b border-amber-50">
+                  <div className="flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-amber-500" />
+                    <span className="font-bold text-gray-800 text-sm sm:text-base">Chamados diários — histórico completo</span>
+                  </div>
+                  <p className="text-xs text-gray-400 mt-0.5">Linha contínua desde o primeiro registro, incluindo dias sem chamados</p>
+                </div>
+                <div className="px-2 sm:px-4 py-4">
+                  {analysisStats.chartData.length > 0 ? (
+                    <div style={{ height: '280px' }}>
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={analysisStats.chartData} margin={{ top: 10, right: 10, left: -15, bottom: 5 }}>
+                          <defs>
+                            <linearGradient id="grad100" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.35} />
+                              <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="#f3f4f6" />
+                          <XAxis
+                            dataKey="periodo"
+                            tick={{ fontSize: 10, fill: '#9ca3af' }}
+                            interval={analysisStats.chartData.length > 60 ? 6 : 2}
+                            minTickGap={6}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <YAxis
+                            tick={{ fontSize: 10, fill: '#9ca3af' }}
+                            width={28}
+                            axisLine={false}
+                            tickLine={false}
+                          />
+                          <Tooltip
+                            contentStyle={{ fontSize: '12px', padding: '8px 12px', borderRadius: '8px', border: '1px solid #fde68a' }}
+                            labelFormatter={(_, payload) => payload?.[0]?.payload?.fullDate || ''}
+                            formatter={(value: number) => [`${value} chamado${value !== 1 ? 's' : ''}`, '']}
+                          />
+                          <Area
+                            type="monotone"
+                            dataKey="chamados"
+                            stroke="#f59e0b"
+                            strokeWidth={2.5}
+                            fill="url(#grad100)"
+                            dot={false}
+                            activeDot={{ r: 5, fill: '#f59e0b', stroke: '#fff', strokeWidth: 2 }}
+                          />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : (
+                    <p className="text-gray-400 text-center py-10 text-sm">Nenhum dado disponível</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Footer milestone strip */}
+              <div className="rounded-2xl bg-gradient-to-r from-amber-500 via-orange-400 to-red-500 p-5 text-white text-center shadow-lg">
+                <p className="text-xs font-semibold uppercase tracking-widest text-white/70 mb-1">Marco histórico</p>
+                <p className="text-lg sm:text-xl font-bold">
+                  {analysisStats.total >= 100
+                    ? `🎉 ${analysisStats.total} chamados atendidos com sucesso!`
+                    : `${analysisStats.total} de 100 — quase lá! 💪`}
+                </p>
+                {analysisStats.firstDate && (
+                  <p className="text-xs text-white/60 mt-1">
+                    Primeiro chamado em {analysisStats.firstDate.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                  </p>
+                )}
               </div>
             </TabsContent>
           </Tabs>

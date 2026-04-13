@@ -266,7 +266,7 @@ export function AnimatedBackground({ className = '' }: AnimatedBackgroundProps) 
             width="60"
             height="60"
             patternUnits="userSpaceOnUse"
-            patternTransform="perspective(1000px) rotateX(60deg)"
+            patternTransform="skewX(-30) scale(1 0.55)"
           >
             <path
               d="M 60 0 L 0 0 0 60"
